@@ -1248,6 +1248,19 @@ function openSampleAnswer(originScreen){
 
 function goSampleBack(){showScreen(saOriginScreen==='talk'?'talk':saOriginScreen==='qa'?'qa':'prep');}
 
+// ── Auto-level from URL param ──────────────────────────────
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const lvl = params.get('level');
+  if(lvl === 'al' || lvl === 'ol'){
+    currentLevel = lvl;
+    currentMode = 'full';
+    buildSelectGrids();
+    // Update mode badge
+    document.getElementById('mode-level-badge').innerHTML=`<span class="level-badge ${lvl}">${lvl.toUpperCase()}</span>`;
+    showScreen('select');
+  }
+})();
 buildSelectGrids();
 </script>
 
