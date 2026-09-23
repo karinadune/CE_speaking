@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>9th Grade Speaking Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F3F0E9;--green:#3A5C38;--green-mid:#5E8560;--green-pale:#C9D9C7;
+  --earth:#8B6B4A;--cream:#FEFCF7;--text:#1D201D;--muted:#787870;--border:#DEDAD1;
+  --red:#B04040;--gold:#D4A44C;
+  --font-serif:'Lora',Georgia,serif;--font-sans:'DM Sans',system-ui,sans-serif;--font-mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:16px;line-height:1.6;min-height:100vh;}
+
+/* NAV */
+.site-nav{background:var(--cream);border-bottom:1px solid var(--border);padding:0 1.75rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-family:var(--font-serif);font-size:1.05rem;font-weight:700;color:var(--green);text-decoration:none;}
+.logo span{color:var(--earth);font-style:italic;}
+.nav-back{font-size:.8rem;color:var(--muted);text-decoration:none;transition:color .18s;}
+.nav-back:hover{color:var(--green);}
+
+/* SCREENS */
+.screen{display:none;max-width:800px;margin:0 auto;padding:2rem 1.5rem 4rem;animation:up .3s ease;}
+.screen.active{display:block;}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* PAGE HEADERS */
+.page-label{font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--earth);margin-bottom:.6rem;}
+.page-title{font-family:var(--font-serif);font-size:1.75rem;font-weight:700;line-height:1.2;margin-bottom:.5rem;}
+.page-sub{font-size:.88rem;color:var(--muted);margin-bottom:2rem;line-height:1.65;}
+
+/* DAY GROUPS */
+.day-group{margin-bottom:2rem;}
+.day-label{font-size:.68rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--green-mid);margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--border);}
+.papers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.65rem;}
+.paper-btn{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;padding:.9rem 1rem;cursor:pointer;text-align:left;transition:all .18s;font-family:var(--font-sans);}
+.paper-btn:hover{border-color:var(--green-mid);background:var(--green-pale);transform:translateY(-1px);}
+.paper-num{font-family:var(--font-mono);font-size:.6rem;color:var(--green-mid);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;}
+.paper-topic{font-size:.85rem;font-weight:600;line-height:1.35;color:var(--text);}
+.paper-vs{font-size:.75rem;color:var(--muted);margin-top:.3rem;}
+
+/* ROLE SELECTION */
+.role-banner{background:var(--green);border-radius:10px;padding:1.5rem;margin-bottom:1.75rem;color:var(--cream);}
+.role-topic-label{font-size:.65rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--green-pale);margin-bottom:.4rem;}
+.role-topic{font-family:var(--font-serif);font-size:1.2rem;font-style:italic;color:#fff;}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.role-card{background:var(--cream);border:2px solid var(--border);border-radius:10px;padding:1.5rem 1.25rem;cursor:pointer;transition:all .2s;text-align:left;}
+.role-card:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 6px 20px rgba(58,92,56,.12);}
+.role-card.teacher-card{grid-column:1/-1;background:var(--bg);}
+.role-letter{font-family:var(--font-serif);font-size:2rem;font-weight:700;color:var(--green);line-height:1;margin-bottom:.4rem;}
+.role-card.teacher-card .role-letter{font-size:1.3rem;}
+.role-title{font-weight:600;font-size:.95rem;margin-bottom:.3rem;}
+.role-position{font-size:.8rem;color:var(--green-mid);font-style:italic;margin-bottom:.5rem;}
+.role-desc{font-size:.78rem;color:var(--muted);line-height:1.5;}
+
+/* STUDENT PRACTICE SCREEN */
+.phase-bar{display:flex;gap:.35rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.phase-pip{flex:1;min-width:28px;height:4px;border-radius:2px;background:var(--border);transition:background .3s;}
+.phase-pip.done{background:var(--green-pale);}
+.phase-pip.active{background:var(--green);}
+
+.phase-card{background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1rem;}
+.phase-card.highlight{border-color:var(--green);background:#EEF4EE;}
+.phase-card.waiting{opacity:.6;}
+.phase-label{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--green-mid);margin-bottom:.6rem;}
+.phase-heading{font-family:var(--font-serif);font-size:1.1rem;font-weight:600;margin-bottom:.5rem;}
+.phase-body{font-size:.85rem;color:var(--muted);line-height:1.65;}
+.phase-body strong{color:var(--text);}
+
+/* TASK CARD */
+.task-card{background:var(--green);color:#fff;border-radius:10px;padding:1.5rem;margin-bottom:1rem;}
+.task-context-label{font-size:.62rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--green-pale);margin-bottom:.5rem;}
+.task-context{font-size:.88rem;color:rgba(255,255,255,.8);line-height:1.6;margin-bottom:.85rem;}
+.task-opinion-label{font-size:.62rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--green-pale);margin-bottom:.3rem;}
+.task-opinion{font-family:var(--font-serif);font-size:1.1rem;font-style:italic;color:#fff;margin-bottom:.85rem;}
+.task-kw-label{font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--green-pale);margin-bottom:.35rem;}
+.task-kw{display:flex;flex-wrap:wrap;gap:.4rem;}
+.kw-chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:.18rem .6rem;border-radius:100px;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.05em;}
+
+/* NOTES */
+.notes-area{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:.85rem 1rem;font-family:var(--font-sans);font-size:.85rem;color:var(--text);resize:vertical;min-height:90px;margin-top:.75rem;transition:border-color .18s;}
+.notes-area:focus{outline:none;border-color:var(--green-mid);}
+.notes-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+
+/* TIMER */
+.timer-block{text-align:center;padding:1rem 0 .5rem;}
+.timer-clock{font-family:var(--font-serif);font-size:3.5rem;font-weight:700;letter-spacing:-2px;line-height:1;transition:color .3s;}
+.timer-clock.warn{color:var(--gold);}
+.timer-clock.urgent{color:var(--red);}
+.timer-sub{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:.3rem;}
+.timer-bar{height:3px;background:var(--border);border-radius:2px;margin:.75rem 0;overflow:hidden;}
+.timer-fill{height:100%;border-radius:2px;background:var(--green);transition:width 1s linear, background .3s;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.7rem 1.4rem;border-radius:6px;font-family:var(--font-sans);font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:all .18s;}
+.btn-green{background:var(--green);color:#fff;}
+.btn-green:hover{background:#2e4a2c;transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--border);}
+.btn-ghost:hover{border-color:var(--muted);color:var(--text);}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-top:1.25rem;}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important;}
+
+/* TEACHER QUESTIONS */
+.q-list{display:flex;flex-direction:column;gap:.65rem;}
+.q-item{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;padding:1rem 1.1rem;display:flex;gap:.75rem;align-items:flex-start;}
+.q-num{font-family:var(--font-mono);font-size:.65rem;color:var(--green);font-weight:600;letter-spacing:.1em;flex-shrink:0;padding-top:.15rem;}
+.q-text{font-size:.88rem;line-height:1.55;}
+.q-who{display:inline-block;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;background:var(--green-pale);color:var(--green);padding:.1rem .4rem;border-radius:3px;margin-left:.4rem;}
+
+/* TEACHER VIEW */
+.dual-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.student-panel{border:1.5px solid var(--border);border-radius:10px;padding:1.25rem;background:var(--cream);}
+.sp-role{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green-mid);margin-bottom:.5rem;}
+.sp-opinion{font-family:var(--font-serif);font-size:.95rem;font-style:italic;color:var(--text);margin-bottom:.5rem;}
+.sp-context{font-size:.78rem;color:var(--muted);line-height:1.55;}
+.discuss-block{background:#EEF4EE;border:1.5px solid var(--green-pale);border-radius:8px;padding:1rem 1.1rem;margin-bottom:1.5rem;font-size:.85rem;}
+.discuss-block strong{color:var(--green);}
+
+/* DONE */
+.done-banner{background:var(--green);color:#fff;border-radius:12px;padding:2rem;text-align:center;margin-bottom:1.5rem;}
+.done-banner h2{font-family:var(--font-serif);font-size:1.5rem;margin-bottom:.3rem;}
+.done-banner p{color:rgba(255,255,255,.7);font-size:.85rem;}
+
+/* MOBILE */
+@media(max-width:600px){
+  .papers-grid{grid-template-columns:1fr 1fr;}
+  .role-grid{grid-template-columns:1fr 1fr;}
+  .dual-grid{grid-template-columns:1fr;}
+  .timer-clock{font-size:2.8rem;}
+  .screen{padding:1.5rem 1rem 3rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="logo">ELT<span>Latvia</span></a>
+  <a href="index.html" class="nav-back">← Back to home</a>
+</nav>
+
+<!-- ── PAPER SELECT ── -->
+<div class="screen active" id="screen-select">
+  <p class="page-label">Monitoringa darbs · 9. klase</p>
+  <h1 class="page-title">Speaking Practice</h1>
+  <p class="page-sub">Choose a paper to practise. Each student will see only their own role card. The teacher questions appear after the discussion phase.</p>
+
+  <div class="day-group">
+    <div class="day-label">2026 — Papers 1–18</div>
+    <div class="papers-grid" id="grid-2026"></div>
+  </div>
+</div>
+
+<!-- ── ROLE SELECT ── -->
+<div class="screen" id="screen-role">
+  <p class="page-label">Step 1 — Choose your role</p>
+  <div class="role-banner">
+    <div class="role-topic-label">Topic</div>
+    <div class="role-topic" id="role-topic-text"></div>
+  </div>
+  <div class="role-grid">
+    <div class="role-card" onclick="startStudent('A')">
+      <div class="role-letter">A</div>
+      <div class="role-title">Student A</div>
+      <div class="role-position" id="role-a-opinion"></div>
+      <div class="role-desc">You speak first in Part 1.</div>
+    </div>
+    <div class="role-card" onclick="startStudent('B')">
+      <div class="role-letter">B</div>
+      <div class="role-title">Student B</div>
+      <div class="role-position" id="role-b-opinion"></div>
+      <div class="role-desc">You listen first, then speak in Part 1.</div>
+    </div>
+    <div class="role-card teacher-card" onclick="startTeacher()">
+      <div class="role-letter">👁️ Teacher</div>
+      <div class="role-title">Teacher / Interviewer view</div>
+      <div class="role-desc">See both student cards and all teacher questions.</div>
+    </div>
+  </div>
+  <button class="btn btn-ghost" onclick="show('screen-select')">← Back to papers</button>
+</div>
+
+<!-- ── STUDENT PRACTICE ── -->
+<div class="screen" id="screen-student">
+  <div class="phase-bar" id="phase-bar"></div>
+
+  <div id="student-content"></div>
+
+  <div class="btn-row" id="student-btns"></div>
+</div>
+
+<!-- ── TEACHER VIEW ── -->
+<div class="screen" id="screen-teacher">
+  <p class="page-label">Teacher / Interviewer</p>
+  <h2 class="page-title" style="font-size:1.3rem;" id="teacher-title"></h2>
+
+  <div class="dual-grid" id="teacher-cards"></div>
+
+  <p style="font-family:var(--font-mono);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--earth);margin-bottom:.75rem;">Discussion goal</p>
+  <div class="discuss-block" id="teacher-discuss"></div>
+
+  <p style="font-family:var(--font-mono);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--earth);margin-bottom:.75rem;margin-top:1.5rem;">Teacher questions</p>
+  <div class="q-list" id="teacher-qs"></div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="show('screen-role')">← Change role</button>
+    <button class="btn btn-ghost" onclick="show('screen-select')">← All papers</button>
+  </div>
+</div>
+
+<script>
+// ══ DATA ══════════════════════════════════════════════════════
+const PAPERS = [
+  {
+    num:1, day:1,
+    topic:"Learning new IT skills",
+    context:"You and your partner want to learn new IT skills and are discussing two possible options: taking an online course or attending face-to-face lessons.",
+    a:"You should take an online course.",
+    b:"You should attend face-to-face lessons.",
+    keywords:["benefits","skills","learning","resources","time"],
+    discuss:"other ways to learn new skills",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"What do you think are important skills to learn for the future? Why?", who:"Student B"},
+      {q:"Do you think artificial intelligence will play a bigger role in learning in the future?", who:"Student A"}
+    ]
+  },
+  {
+    num:2, day:1,
+    topic:"After-school activities",
+    context:"You and your partner are planning your free time after school and are discussing two possible options: joining a theatre club or joining a sports club.",
+    a:"You should join a theatre club.",
+    b:"You should join a sports club.",
+    keywords:["benefits","skills","interests","personality","experience"],
+    discuss:"what kind of club activities are most popular among teenagers",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"How can participating in clubs help you in the future?", who:"Student B"},
+      {q:"What new after-school clubs should your school offer? Why?", who:"Student A"}
+    ]
+  },
+  {
+    num:3, day:1,
+    topic:"Improving English outside lessons",
+    context:"You and your partner want to improve your English outside of lessons and are discussing two possible options: watching English TV shows or practising English with friends after school.",
+    a:"You should watch English TV shows.",
+    b:"You should practise English with friends after school.",
+    keywords:["learning","motivation","time","interests","communication"],
+    discuss:"what else you could do to improve your English",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"Do you think AI apps will mean people won't need to learn foreign languages? Why?", who:"Student B"},
+      {q:"What can help students to keep learning a language when it gets difficult?", who:"Student A"}
+    ]
+  },
+  {
+    num:4, day:1,
+    topic:"Weekend plans",
+    context:"You and your partner are planning to do something special at the weekend and are discussing two possible options: going on a bike trip or visiting a museum.",
+    a:"You should go on a bike trip.",
+    b:"You should visit a museum.",
+    keywords:["interests","fun","cost","health","experience"],
+    discuss:"what other interesting things you could do at weekends",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"Is it important to go somewhere with friends rather than just be together?", who:"Student B"},
+      {q:"What weekend activities are popular among teenagers? Why?", who:"Student A"}
+    ]
+  },
+  {
+    num:5, day:1,
+    topic:"Internet safety awareness",
+    context:"You and your classmate are discussing the best way to inform other students about internet safety and are choosing between two options: creating a short video or giving a presentation in class.",
+    a:"You should create a short video.",
+    b:"You should give a presentation in class.",
+    keywords:["audience","interests","message","aim","benefits"],
+    discuss:"how to make internet safety information clear and interesting for classmates",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"What should young people think about before posting something on social media?", who:"Student B"},
+      {q:"How can schools help students understand online risks better?", who:"Student A"}
+    ]
+  },
+  {
+    num:6, day:1,
+    topic:"Career Day guest speaker",
+    context:"You are talking about the upcoming Career Day in your school and are discussing which guest speaker would be best: a famous businessman or a career adviser.",
+    a:"You should invite a famous businessman.",
+    b:"You should invite a career adviser.",
+    keywords:["experience","educational value","questions","motivation","benefits"],
+    discuss:"what else you could include for Career Day to make it more interesting",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"How can schools help students learn about different types of work?", who:"Student B"},
+      {q:"Which professions are popular among teenagers? Why?", who:"Student A"}
+    ]
+  },
+  {
+    num:7, day:2,
+    topic:"Raising money for school",
+    context:"You and your classmate are thinking about how to raise some money for your school and are discussing two possible options: organising a small performance or selling handmade things.",
+    a:"You should organise a small performance.",
+    b:"You should sell handmade things.",
+    keywords:["creativity","teamwork","time","planning","benefits"],
+    discuss:"how to involve other classes in your fundraising idea",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"Why is it important to take part in activities with other students from your class?", who:"Student B"},
+      {q:"What skills can you develop by organising activities like the ones you discussed?", who:"Student A"}
+    ]
+  },
+  {
+    num:8, day:2,
+    topic:"Starting a new hobby",
+    context:"You and your classmate want to start a new hobby and are discussing two possible options: learning to play a musical instrument or learning to draw.",
+    a:"You should learn to play a musical instrument.",
+    b:"You should learn to draw.",
+    keywords:["benefits","skills","time","responsibility","personality"],
+    discuss:"what kind of activities are good for groups of teenagers",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"Which hobbies should schools support? Why?", who:"Student B"},
+      {q:"Why is it important for people to have hobbies?", who:"Student A"}
+    ]
+  },
+  {
+    num:9, day:2,
+    topic:"Sports Day",
+    context:"You and your classmate are talking about the upcoming Sports Day in your school and are discussing how to prepare: taking part in a sport on the day or helping to organise the event.",
+    a:"You should take part in a sport on the day.",
+    b:"You should help organise the event.",
+    keywords:["experience","interests","motivation","fun","teamwork"],
+    discuss:"how to make the Sports Day enjoyable and successful",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"How many sports lessons should be in the timetable? Why?", who:"Student B"},
+      {q:"How can schools teach their students to have a healthy lifestyle?", who:"Student A"}
+    ]
+  },
+  {
+    num:10, day:2,
+    topic:"End-of-year celebration",
+    context:"You and your partner are planning how to celebrate the end of the school year and are discussing two possible options: organising a party or going on a class trip.",
+    a:"You should organise a party.",
+    b:"You should go on a class trip.",
+    keywords:["benefits","fun","cost","planning","responsibilities"],
+    discuss:"what else you could do to make the end of the school year special",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"Why is it a good idea to spend time with your classmates before the end of the year?", who:"Student B"},
+      {q:"What skills can you learn when organising class events?", who:"Student A"}
+    ]
+  },
+  {
+    num:11, day:2,
+    topic:"Supporting classmates' wellbeing",
+    context:"You and your classmate want to support your classmates' well-being and are discussing two possible options: planning group games during break time or making a short video about managing stress.",
+    a:"You should plan group games during break time.",
+    b:"You should make a short video about managing stress.",
+    keywords:["fun","school life","relaxation","aim","benefits"],
+    discuss:"what else students could do to feel better at school",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"What do students of your age like to do to relax after school?", who:"Student B"},
+      {q:"What do students of your age like to do at the weekend?", who:"Student A"}
+    ]
+  },
+  {
+    num:12, day:2,
+    topic:"Making school more pleasant",
+    context:"You and your classmate want to make school a more pleasant place and are discussing two possible options: decorating your classroom or organising a games day.",
+    a:"You should decorate your classroom.",
+    b:"You should organise a games day.",
+    keywords:["benefits","school life","resources","responsibility","skills"],
+    discuss:"how you could get other students involved in improving the school",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"Why is it important for students to feel comfortable in their school environment?", who:"Student B"},
+      {q:"Should students be involved in improving their school? Why / Why not?", who:"Student A"}
+    ]
+  },
+  {
+    num:13, day:3,
+    topic:"Homework: yes or no?",
+    context:"You and your classmate are discussing school and learning and have different opinions on homework.",
+    a:"Students should have homework.",
+    b:"Students should not have homework.",
+    keywords:["benefits","learning","responsibility","support","time"],
+    discuss:"what kind of homework is most useful for students",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"How should classmates help each other to study?", who:"Student B"},
+      {q:"What kind of project work do you like doing?", who:"Student A"}
+    ]
+  },
+  {
+    num:14, day:3,
+    topic:"Being environmentally friendly",
+    context:"You and your partner want to be more environmentally friendly and are discussing two possible options: organising a clean-up event or making posters on how to help the environment.",
+    a:"You should organise a clean-up event.",
+    b:"You should make posters on how to help the environment.",
+    keywords:["benefits","local area","time","planning","responsibilities"],
+    discuss:"what else your class could do to promote being environmentally friendly",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"What does your family do to be environmentally friendly?", who:"Student B"},
+      {q:"What could you do to improve your local area?", who:"Student A"}
+    ]
+  },
+  {
+    num:15, day:3,
+    topic:"Summer volunteering",
+    context:"You and your classmate want to do something useful during the summer holidays and are discussing two possible options: volunteering at an animal shelter or volunteering at a summer camp for young children.",
+    a:"You should volunteer at an animal shelter.",
+    b:"You should volunteer at a summer camp for young children.",
+    keywords:["experience","interests","learning","fun","benefits"],
+    discuss:"what other useful things students could do during the summer holidays",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"Why is it important to try something new during the summer holidays?", who:"Student B"},
+      {q:"Why is it important to stay active during the summer holidays?", who:"Student A"}
+    ]
+  },
+  {
+    num:16, day:3,
+    topic:"Project topic choice",
+    context:"You and your partner are choosing a project topic and are discussing two possible options: creating a project about digital safety or about how technology has changed our lives.",
+    a:"You should create a project about digital safety.",
+    b:"You should create a project about how technology has changed our lives.",
+    keywords:["benefits","time","resources","interests","skills"],
+    discuss:"how to present your project to your classmates",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"Why is it important to study Information Technology in schools?", who:"Student B"},
+      {q:"How has technology changed the way you study or communicate?", who:"Student A"}
+    ]
+  },
+  {
+    num:17, day:3,
+    topic:"Improving the classroom",
+    context:"You and your partner are thinking about how to improve your classroom and are discussing two possible options: decorating the classroom or buying new board games.",
+    a:"You should decorate the classroom.",
+    b:"You should buy new board games.",
+    keywords:["benefits","resources","creativity","comfort","daily life"],
+    discuss:"how to present your idea to your class teacher",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"What would be your idea of a perfect classroom?", who:"Student B"},
+      {q:"How can the classroom environment affect how well students learn?", who:"Student A"}
+    ]
+  },
+  {
+    num:18, day:3,
+    topic:"Talent show",
+    context:"You and your class are organising a student talent show and are discussing two possible ways to help: by performing in the show or by helping behind the scenes.",
+    a:"You should perform in the show.",
+    b:"You should help behind the scenes.",
+    keywords:["teamwork","benefits","school spirit","skills","responsibility"],
+    discuss:"how to make the talent show a success",
+    questions:[
+      {q:"Would you support the position you have just presented in a real-life situation? Why / Why not?", who:"A first, then B"},
+      {q:"Why is it a good idea for schools to organise talent shows?", who:"Student B"},
+      {q:"Is helping behind the scenes as important as performing? Why / Why not?", who:"Student A"}
+    ]
+  }
+];
+
+// ══ STATE ══════════════════════════════════════════════════════
+let currentPaper = null;
+let currentRole = null; // 'A' | 'B' | 'teacher'
+let currentPhase = 0;
+let timerInterval = null;
+let timerSeconds = 0;
+let timerTotal = 0;
+
+// Phase definitions per role
+// Phases: {label, heading, body, duration (seconds), notes, timer}
+function getPhases(role, paper) {
+  const isA = role === 'A';
+  return [
+    {
+      label:"Phase 1 — Preparation",
+      heading:"📝 Prepare your talk",
+      body:`<strong>Your opinion:</strong> ${isA ? paper.a : paper.b}<br><br>Prepare <strong>at least two reasons and examples</strong> to support your opinion. You can use the keyword ideas below.`,
+      keywords: paper.keywords,
+      duration: 300, // 5 min
+      timerLabel:"Preparation time",
+      notes: true,
+      notesLabel:"Your notes"
+    },
+    isA ? {
+      label:"Phase 2 — Your turn",
+      heading:"🗣️ Present your opinion",
+      body:`Speak for <strong>up to 2 minutes</strong>. Cover your opinion and at least two reasons with examples.<br><br><em>Student B: listen and take notes.</em>`,
+      duration: 120,
+      timerLabel:"Talk time",
+      notes: false
+    } : {
+      label:"Phase 2 — Listen",
+      heading:"👂 Listen to Student A",
+      body:`Student A is presenting their opinion. <strong>Listen carefully and take notes</strong> — you will use them in the discussion.`,
+      duration: 120,
+      timerLabel:"Student A speaking",
+      notes: true,
+      notesLabel:"Notes on Student A's points"
+    },
+    isA ? {
+      label:"Phase 3 — Listen",
+      heading:"👂 Listen to Student B",
+      body:`Student B is now presenting their opinion. <strong>Listen carefully and take notes</strong> — you will use them in the discussion.`,
+      duration: 120,
+      timerLabel:"Student B speaking",
+      notes: true,
+      notesLabel:"Notes on Student B's points"
+    } : {
+      label:"Phase 3 — Your turn",
+      heading:"🗣️ Present your opinion",
+      body:`Speak for <strong>up to 2 minutes</strong>. Cover your opinion and at least two reasons with examples.<br><br><em>Student A: listen and take notes.</em>`,
+      duration: 120,
+      timerLabel:"Talk time",
+      notes: false
+    },
+    {
+      label:"Phase 4 — Prepare questions",
+      heading:"💭 Prepare discussion questions",
+      body:`Prepare <strong>2–3 questions</strong> for your partner based on what they said. Also read the discussion goal below.`,
+      discussGoal: `Decide together: <strong>${paper.discuss}</strong>`,
+      duration: 120,
+      timerLabel:"Preparation time",
+      notes: true,
+      notesLabel:"Your questions for the discussion"
+    },
+    {
+      label:"Phase 5 — Discussion",
+      heading:"💬 Discuss with your partner",
+      body:`Use your prepared questions to <strong>discuss each other's ideas</strong>. You also need to <strong>agree together</strong> on: <em>${paper.discuss}</em>.`,
+      duration: 180,
+      timerLabel:"Discussion time",
+      notes: false
+    },
+    {
+      label:"Phase 6 — Teacher questions",
+      heading:"❓ Answer the teacher's questions",
+      body:`The teacher will now ask you each two questions. Answer as fully as you can.`,
+      duration: 0,
+      timerLabel:null,
+      questions: paper.questions,
+      notes: false
+    }
+  ];
+}
+
+// ══ BUILD PAPER GRIDS ══════════════════════════════════════════
+function buildGrids() {
+  const grid = document.getElementById('grid-2026');
+  PAPERS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'paper-btn';
+    btn.innerHTML = `<div class="paper-num">Paper ${p.num}</div><div class="paper-topic">${p.topic}</div><div class="paper-vs">${shortOpinion(p.a)} vs ${shortOpinion(p.b)}</div>`;
+    btn.onclick = () => selectPaper(p);
+    grid.appendChild(btn);
+  });
+}
+
+function shortOpinion(op) {
+  return op.replace(/^You should |^Students should /, '').replace(/\.$/, '');
+}
+
+// ══ NAVIGATION ═════════════════════════════════════════════════
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function selectPaper(paper) {
+  currentPaper = paper;
+  document.getElementById('role-topic-text').textContent = paper.context;
+  document.getElementById('role-a-opinion').textContent = paper.a;
+  document.getElementById('role-b-opinion').textContent = paper.b;
+  show('screen-role');
+}
+
+function startStudent(role) {
+  currentRole = role;
+  currentPhase = 0;
+  stopTimer();
+  renderPhase();
+  show('screen-student');
+}
+
+function startTeacher() {
+  renderTeacher();
+  show('screen-teacher');
+}
+
+// ══ STUDENT PHASE RENDERER ═════════════════════════════════════
+function renderPhase() {
+  const phases = getPhases(currentRole, currentPaper);
+  const phase = phases[currentPhase];
+  const totalPhases = phases.length;
+
+  // Phase bar
+  const bar = document.getElementById('phase-bar');
+  bar.innerHTML = phases.map((p,i) =>
+    `<div class="phase-pip ${i < currentPhase ? 'done' : i === currentPhase ? 'active' : ''}"></div>`
+  ).join('');
+
+  // Content
+  const content = document.getElementById('student-content');
+  let html = '';
+
+  // Task card (always visible in phases 0-3)
+  if (currentPhase <= 3) {
+    html += `<div class="task-card">
+      <div class="task-context-label">Your situation</div>
+      <div class="task-context">${currentPaper.context}</div>
+      <div class="task-opinion-label">Your position</div>
+      <div class="task-opinion">${currentRole === 'A' ? currentPaper.a : currentPaper.b}</div>
+      ${currentPhase <= 1 ? `<div class="task-kw-label">Ideas to use</div><div class="task-kw">${currentPaper.keywords.map(k=>`<span class="kw-chip">${k}</span>`).join('')}</div>` : ''}
+    </div>`;
+  }
+
+  // Phase card
+  html += `<div class="phase-card${phase.heading.startsWith('🗣️') || phase.heading.startsWith('💬') ? ' highlight' : ''}">
+    <div class="phase-label">${phase.label}</div>
+    <div class="phase-heading">${phase.heading}</div>
+    <div class="phase-body">${phase.body}</div>`;
+
+  if (phase.discussGoal) {
+    html += `<div style="margin-top:.85rem;padding:.75rem 1rem;background:var(--green-pale);border-radius:6px;font-size:.82rem;">${phase.discussGoal}</div>`;
+  }
+
+  if (phase.duration > 0) {
+    html += `<div class="timer-block">
+      <div class="timer-clock" id="timer-clock">${formatTime(phase.duration)}</div>
+      <div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+      <div class="timer-sub" id="timer-sub">${phase.timerLabel}</div>
+    </div>`;
+  }
+
+  if (phase.notes) {
+    html += `<div style="margin-top:.75rem;"><div class="notes-label">${phase.notesLabel}</div><textarea class="notes-area" placeholder="Write your notes here..."></textarea></div>`;
+  }
+
+  if (phase.questions) {
+    html += `<div class="q-list" style="margin-top:1rem;">${phase.questions.map((q,i) =>
+      `<div class="q-item"><div class="q-num">Q${i+1}</div><div class="q-text">${q.q}<span class="q-who">${q.who}</span></div></div>`
+    ).join('')}</div>`;
+  }
+
+  html += `</div>`;
+  content.innerHTML = html;
+
+  // Buttons
+  const btns = document.getElementById('student-btns');
+  const isLast = currentPhase === totalPhases - 1;
+  btns.innerHTML = '';
+
+  if (phase.duration > 0) {
+    const startBtn = document.createElement('button');
+    startBtn.className = 'btn btn-green';
+    startBtn.id = 'btn-start-timer';
+    startBtn.textContent = '▶ Start timer';
+    startBtn.onclick = () => startTimer(phase.duration);
+    btns.appendChild(startBtn);
+
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'btn btn-ghost';
+    resetBtn.textContent = '↺ Reset';
+    resetBtn.onclick = () => { stopTimer(); resetTimer(phase.duration); };
+    btns.appendChild(resetBtn);
+  }
+
+  if (!isLast) {
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn btn-green';
+    nextBtn.textContent = currentPhase === totalPhases - 2 ? 'View teacher questions →' : 'Next phase →';
+    nextBtn.onclick = () => { stopTimer(); currentPhase++; renderPhase(); window.scrollTo(0,0); };
+    btns.appendChild(nextBtn);
+  } else {
+    const doneBtn = document.createElement('button');
+    doneBtn.className = 'btn btn-ghost';
+    doneBtn.textContent = '← Practice another paper';
+    doneBtn.onclick = () => show('screen-select');
+    btns.appendChild(doneBtn);
+  }
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'btn btn-ghost';
+  backBtn.textContent = '← Change role';
+  backBtn.onclick = () => { stopTimer(); show('screen-role'); };
+  btns.appendChild(backBtn);
+
+  // Auto-start timer if phase has one
+  if (phase.duration > 0) {
+    timerTotal = phase.duration;
+    timerSeconds = phase.duration;
+  }
+}
+
+// ══ TIMER ══════════════════════════════════════════════════════
+function formatTime(s) {
+  return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+}
+
+function resetTimer(total) {
+  timerSeconds = total;
+  timerTotal = total;
+  const clock = document.getElementById('timer-clock');
+  const fill = document.getElementById('timer-fill');
+  if (clock) { clock.textContent = formatTime(total); clock.className = 'timer-clock'; }
+  if (fill) fill.style.width = '100%';
+  const btn = document.getElementById('btn-start-timer');
+  if (btn) btn.textContent = '▶ Start timer';
+}
+
+function startTimer(total) {
+  stopTimer();
+  timerTotal = total;
+  if (!timerSeconds || timerSeconds === total) timerSeconds = total;
+  const btn = document.getElementById('btn-start-timer');
+  if (btn) btn.textContent = '⏸ Pause';
+  if (btn) btn.onclick = pauseTimer;
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    const clock = document.getElementById('timer-clock');
+    const fill = document.getElementById('timer-fill');
+    if (!clock) { stopTimer(); return; }
+
+    clock.textContent = formatTime(timerSeconds);
+    if (fill) fill.style.width = `${(timerSeconds/timerTotal)*100}%`;
+
+    if (timerSeconds <= 30 && timerSeconds > 10) { clock.className = 'timer-clock warn'; if (fill) fill.style.background = 'var(--gold)'; }
+    else if (timerSeconds <= 10) { clock.className = 'timer-clock urgent'; if (fill) fill.style.background = 'var(--red)'; }
+
+    if (timerSeconds <= 0) { stopTimer(); clock.textContent = '0:00'; }
+  }, 1000);
+}
+
+function pauseTimer() {
+  stopTimer();
+  const btn = document.getElementById('btn-start-timer');
+  if (btn) { btn.textContent = '▶ Resume'; btn.onclick = () => startTimer(timerTotal); }
+}
+
+function stopTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+}
+
+// ══ TEACHER VIEW ═══════════════════════════════════════════════
+function renderTeacher() {
+  const p = currentPaper;
+  document.getElementById('teacher-title').textContent = `Paper ${p.num} — ${p.topic}`;
+
+  document.getElementById('teacher-cards').innerHTML = `
+    <div class="student-panel">
+      <div class="sp-role">Student A — speaks first</div>
+      <div class="sp-opinion">${p.a}</div>
+      <div class="sp-context">${p.context}</div>
+      <div style="margin-top:.75rem;">
+        <div style="font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;">Keywords</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.3rem;">${p.keywords.map(k=>`<span style="font-family:var(--font-mono);font-size:.62rem;background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:.12rem .4rem;">${k}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div class="student-panel">
+      <div class="sp-role">Student B — listens first</div>
+      <div class="sp-opinion">${p.b}</div>
+      <div class="sp-context">${p.context}</div>
+      <div style="margin-top:.75rem;">
+        <div style="font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;">Keywords</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.3rem;">${p.keywords.map(k=>`<span style="font-family:var(--font-mono);font-size:.62rem;background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:.12rem .4rem;">${k}</span>`).join('')}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('teacher-discuss').innerHTML = `Decide together: <strong>${p.discuss}</strong>`;
+
+  document.getElementById('teacher-qs').innerHTML = p.questions.map((q,i) =>
+    `<div class="q-item"><div class="q-num">Q${i+1}</div><div class="q-text">${q.q}<span class="q-who">${q.who}</span></div></div>`
+  ).join('');
+}
+
+// ══ BOOT ═══════════════════════════════════════════════════════
+buildGrids();
+</script>
+</body>
+</html>

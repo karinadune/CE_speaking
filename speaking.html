@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CE Speaking Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1D201D;--cream:#F3F0E9;--amber:#3A5C38;--dust:#DEDAD1;--muted:#787870;--paper:#FEFCF7;--red:#c0392b;--sage:#5E8560;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(ellipse at 15% 60%,rgba(58,92,56,.07) 0%,transparent 55%),radial-gradient(ellipse at 85% 15%,rgba(58,92,56,.05) 0%,transparent 50%);pointer-events:none;z-index:0;}
+.app{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+header{text-align:center;padding:2.5rem 0 2rem;border-bottom:1px solid var(--dust);margin-bottom:2.5rem;}
+.hdr-label{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.25em;color:#3A5C38;text-transform:uppercase;margin-bottom:.5rem;}
+header h1{font-family:'Lora',serif;font-size:clamp(1.8rem,5vw,2.5rem);font-weight:700;}
+header p{margin-top:.5rem;font-size:.88rem;color:var(--muted);}
+.screen{display:none;}
+.screen.active{display:block;animation:fadeUp .35s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+/* LEVEL + MODE CARDS */
+.two-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.5rem 0 2.5rem;}
+.big-card{background:var(--paper);border:2px solid var(--dust);border-radius:10px;padding:1.6rem 1.4rem;cursor:pointer;transition:all .2s;text-align:left;}
+.big-card:hover{border-color:var(--amber);box-shadow:0 4px 18px rgba(58,92,56,.13);transform:translateY(-2px);}
+.big-card .bc-icon{font-size:1.6rem;margin-bottom:.6rem;}
+.big-card .bc-title{font-family:'Lora',serif;font-size:1.05rem;font-weight:700;margin-bottom:.35rem;}
+.big-card .bc-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;background:var(--cream);border:1px solid var(--dust);border-radius:20px;padding:.2rem .6rem;color:var(--muted);margin-bottom:.4rem;}
+.big-card .bc-desc{font-size:.8rem;color:var(--muted);line-height:1.5;}
+.bc-pills{margin-top:.7rem;display:flex;flex-wrap:wrap;gap:.3rem;}
+.bc-pill{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;background:var(--cream);border:1px solid var(--dust);border-radius:20px;padding:.2rem .55rem;color:var(--muted);}
+/* SECTION TITLES */
+.section-title{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:1.6rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid var(--dust);}
+/* PAPER SELECT GRID */
+.select-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:.8rem;margin-bottom:.8rem;}
+.paper-card{background:var(--paper);border:1.5px solid var(--dust);border-radius:8px;padding:.9rem 1rem;cursor:pointer;transition:all .2s;}
+.paper-card:hover{border-color:var(--amber);transform:translateY(-2px);box-shadow:0 4px 14px rgba(58,92,56,.13);}
+.pc-num{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--amber);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.25rem;}
+.pc-topic{font-family:'Lora',serif;font-size:.9rem;line-height:1.3;}
+/* STAGE PILLS */
+.stage-pills{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.6rem;}
+.stage-pill{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .75rem;border-radius:20px;border:1px solid var(--dust);color:var(--muted);background:var(--paper);}
+.stage-pill.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+.stage-pill.done{background:var(--sage);color:#fff;border-color:var(--sage);}
+/* TOPIC BANNER */
+.topic-banner{background:#3A5C38;color:#FEFCF7;border-radius:10px;padding:1.4rem 1.8rem;margin-bottom:1.2rem;}
+.tb-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--amber);text-transform:uppercase;margin-bottom:.3rem;}
+.topic-banner h2{font-family:'Lora',serif;font-size:clamp(1.1rem,3vw,1.6rem);font-style:italic;}
+.topic-banner .tb-context{font-size:.82rem;color:rgba(255,255,255,.65);margin-top:.4rem;line-height:1.5;}
+/* MATERIALS / SOURCES */
+.materials-box{background:var(--paper);border:1.5px solid var(--dust);border-radius:10px;padding:1.3rem;margin-bottom:1.2rem;}
+.materials-box h3{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem;}
+.quotes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.7rem;}
+.quote-item{background:var(--cream);border-left:3px solid var(--amber);border-radius:0 6px 6px 0;padding:.7rem .9rem;font-size:.84rem;line-height:1.5;}
+.qi-source{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:.4rem;font-style:italic;}
+/* OL TWO-SOURCE LAYOUT */
+.ol-sources-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem;}
+.source-block{background:var(--cream);border:1.5px solid var(--dust);border-radius:8px;padding:1rem;}
+.source-label-tag{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);font-weight:500;margin-bottom:.45rem;}
+.source-text-body{font-size:.84rem;line-height:1.55;color:var(--ink);}
+.source-attr{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);font-style:italic;margin-top:.5rem;}
+/* INSTRUCTIONS */
+.instr-box{background:#fff8ee;border:1.5px solid #f0d9a8;border-radius:8px;padding:.85rem 1.1rem;margin-bottom:1.2rem;font-size:.84rem;line-height:1.7;}
+.instr-box strong{color:var(--amber);}
+.ol-checklist{list-style:none;margin:.4rem 0 0;}
+.ol-checklist li{display:flex;gap:.5rem;align-items:flex-start;padding:.25rem 0;font-size:.82rem;color:var(--ink);}
+.ol-checklist li::before{content:'›';color:var(--amber);flex-shrink:0;font-weight:700;}
+/* TIMER */
+.timer-display{text-align:center;margin:1.2rem 0 .4rem;}
+.timer-clock{font-family:'Lora',serif;font-size:4rem;font-weight:700;letter-spacing:-2px;line-height:1;transition:color .3s;}
+.timer-clock.warn{color:var(--amber);}
+.timer-clock.urgent{color:var(--red);}
+.timer-sublabel{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:.25rem;}
+.progress-bar{height:3px;background:var(--dust);border-radius:2px;margin:.6rem 0 1.2rem;overflow:hidden;}
+.progress-fill{height:100%;border-radius:2px;transition:width 1s linear,background .3s;background:var(--amber);}
+/* TALK PROMPTS */
+.prompts-ul{list-style:none;}
+.prompts-ul li{display:flex;gap:.7rem;align-items:flex-start;padding:.5rem 0;border-bottom:1px solid var(--dust);font-size:.88rem;line-height:1.5;}
+.prompts-ul li:last-child{border-bottom:none;}
+.bullet{width:6px;height:6px;border-radius:50%;background:var(--amber);margin-top:.55rem;flex-shrink:0;}
+/* RECORDING */
+.rec-row{text-align:center;margin-bottom:.4rem;}
+.rec-indicator{display:inline-flex;align-items:center;gap:.45rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;color:var(--red);}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 1s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+/* Q CARD */
+.q-card{background:var(--paper);border:2px solid var(--ink);border-radius:10px;padding:1.5rem;margin-bottom:.8rem;}
+.q-num{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:.45rem;}
+.q-text{font-family:'DM Sans',sans-serif;font-size:1.22rem;font-weight:500;line-height:1.6;}
+.q-quote-ref{margin-top:1rem;padding:.75rem 1rem;background:var(--cream);border-left:3px solid var(--amber);border-radius:0 6px 6px 0;font-size:.98rem;line-height:1.55;}
+.qr-label{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);margin-bottom:.3rem;}
+.qr-source{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted);margin-top:.3rem;font-style:italic;}
+/* QA ONLY */
+.qaonly-list{display:grid;gap:1rem;}
+.qaonly-item{background:var(--paper);border:1.5px solid var(--dust);border-radius:10px;padding:1.2rem 1.3rem;}
+.qi-num-label{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--amber);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.35rem;}
+.qi-q-text{font-family:'DM Sans',sans-serif;font-size:1.2rem;font-weight:500;line-height:1.55;}
+/* QA TIMER */
+.qa-timer-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem;}
+.qa-clock{font-family:'Lora',serif;font-size:2.2rem;font-weight:700;letter-spacing:-1px;transition:color .3s;}
+.qa-clock.warn{color:var(--amber);}
+.qa-clock.urgent{color:var(--red);}
+.qa-timer-label{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+.nav-hint{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;text-align:center;margin-top:.5rem;}
+/* SCAFFOLD / HINT */
+.scaffold-panel{display:none;background:var(--paper);border:1.5px solid var(--amber);border-radius:10px;padding:1.1rem 1.3rem;margin-top:.8rem;animation:fadeUp .25s ease;}
+.scaffold-panel.open{display:block;}
+.scaffold-panel h4{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:.85rem;}
+.scaffold-dj{background:#3A5C38;color:#FEFCF7;border-radius:7px;padding:.65rem .95rem;font-size:.84rem;line-height:1.5;margin-bottom:.9rem;}
+.scaffold-step{display:flex;gap:.75rem;padding:.55rem 0;border-bottom:1px solid var(--dust);font-size:.84rem;line-height:1.5;}
+.scaffold-step:last-child{border-bottom:none;padding-bottom:0;}
+.scaffold-step-num{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--amber);font-weight:500;min-width:2.2rem;padding-top:.1rem;}
+.crit-list{list-style:none;}
+.crit-list li{display:flex;gap:.65rem;padding:.48rem 0;border-bottom:1px solid var(--dust);font-size:.84rem;line-height:1.5;}
+.crit-list li:last-child{border-bottom:none;}
+.crit-mark{color:var(--amber);font-size:.9rem;flex-shrink:0;}
+.hint-panel{display:none;background:#fff8ee;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:.8rem 1rem;margin-top:.65rem;font-size:.88rem;line-height:1.6;animation:fadeUp .25s ease;}
+.hint-panel.open{display:block;}
+.hint-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);margin-bottom:.3rem;}
+.btn-hint{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .82rem;border-radius:20px;font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1.5px solid var(--amber);background:transparent;color:var(--amber);transition:all .18s;margin-top:.7rem;}
+.btn-hint:hover{background:var(--amber);color:#fff;}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.7rem 1.3rem;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;border:none;transition:all .18s;}
+.btn-primary{background:#3A5C38;color:#FEFCF7;}
+.btn-primary:hover{background:#2e4a2c;transform:translateY(-1px);}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-amber:hover{background:#b07020;}
+.btn-sage{background:var(--sage);color:#fff;}
+.btn-sage:hover{background:#3a6a4e;}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--dust);}
+.btn-ghost:hover{border-color:var(--muted);color:var(--ink);}
+.btn-sm{padding:.45rem .85rem;font-size:.78rem;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-top:1rem;}
+/* DONE */
+.done-banner{text-align:center;background:#3A5C38;color:#FEFCF7;border-radius:12px;padding:2rem;margin-bottom:1.5rem;}
+.done-banner h2{font-family:'Lora',serif;font-size:1.6rem;margin-bottom:.35rem;}
+.done-banner p{color:var(--dust);font-size:.88rem;}
+/* LEVEL BADGE */
+.level-badge{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;display:inline-block;padding:.2rem .6rem;border-radius:20px;margin-left:.4rem;}
+.level-badge.al{background:#3A5C38;color:#C9D9C7;}
+.level-badge.ol{background:var(--sage);color:#fff;}
+/* PHRASE BANKS */
+.pb-toggle{display:inline-flex;align-items:center;gap:.3rem;margin-top:.55rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:var(--amber);padding:0;transition:opacity .15s;}
+.pb-toggle:hover{opacity:.65;}
+.phrase-bank{display:none;margin-top:.5rem;background:var(--cream);border-radius:6px;padding:.65rem .85rem;animation:fadeUp .2s ease;}
+.phrase-bank.open{display:block;}
+.pb-section{margin-bottom:.55rem;}
+.pb-section:last-child{margin-bottom:0;}
+.pb-section-title{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+.pb-phrase{font-size:.8rem;line-height:1.55;color:var(--ink);padding:.18rem 0;border-bottom:1px solid var(--dust);}
+.pb-phrase:last-child{border-bottom:none;}
+.pb-prompt{font-size:.8rem;line-height:1.55;color:var(--muted);font-style:italic;margin-bottom:.4rem;}
+.pb-words{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.45rem;}
+.pb-word{font-family:'DM Mono',monospace;font-size:.65rem;background:var(--paper);border:1px solid var(--dust);border-radius:4px;padding:.15rem .45rem;color:var(--ink);}
+.sa-disclaimer{background:#fff8ee;border:1.5px solid #f0d9a8;border-radius:8px;padding:.8rem 1.1rem;margin-bottom:1.1rem;font-size:.8rem;color:var(--muted);line-height:1.6;}
+.sa-legend{display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:1rem;}
+.sa-legend-item{display:flex;align-items:center;gap:.4rem;font-size:.75rem;font-family:'DM Mono',monospace;}
+.sa-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.sa-task{background:var(--paper);border:1.5px solid var(--dust);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:1.1rem;font-size:.85rem;line-height:1.65;color:var(--ink);}
+.sa-controls{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;}
+.sa-counter{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.1em;}
+.sa-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.sa-text-col{font-size:.88rem;line-height:1.8;color:var(--ink);}
+.sa-part{border-radius:3px;padding:1px 3px;transition:background .3s;}
+.sa-part.good{background:#c9dcc9;}
+.sa-part.partial{background:#e0d5a8;}
+.sa-part.weak{background:#e0c4c4;}
+.sa-ann-col{display:flex;flex-direction:column;gap:.5rem;}
+.sa-ann{display:none;border-radius:6px;padding:.5rem .75rem;font-size:.82rem;line-height:1.5;background:var(--paper);border:1.5px solid var(--dust);}
+.sa-ann.visible{display:block;}
+.sa-ann.good{border-left:3px solid #7aaa7a;}
+.sa-ann.partial{border-left:3px solid #c8aa5a;}
+.sa-ann.weak{border-left:3px solid #c48080;}
+.sa-ann-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;color:var(--muted);}
+.sa-text-col{font-size:1.05rem;line-height:1.85;color:var(--ink);}
+.sa-para{margin-bottom:1.1rem;}
+.btn-sample{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:6px;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border:1.5px solid var(--dust);background:var(--paper);color:var(--muted);transition:all .18s;}
+.btn-sample:hover{border-color:var(--ink);color:var(--ink);}
+.btn-sample.coming{opacity:.4;cursor:not-allowed;}
+@media(max-width:600px){
+  .two-grid,.ol-sources-grid{grid-template-columns:1fr;}
+  .quotes-grid{grid-template-columns:1fr;}
+  .timer-clock{font-size:3rem;}
+  .select-grid{grid-template-columns:1fr 1fr;}
+  .sa-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+.site-nav{background:#FEFCF7;border-bottom:1px solid #DEDAD1;padding:0 2.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;font-family:'DM Sans',sans-serif;}
+.site-nav .logo{font-family:'Lora',Georgia,serif;font-size:1.1rem;font-weight:700;color:#3A5C38;text-decoration:none;}
+.site-nav .logo span{color:#8B6B4A;font-style:italic;}
+.site-nav-back{font-size:.82rem;color:#787870;text-decoration:none;display:flex;align-items:center;gap:.35rem;transition:color .18s;}
+.site-nav-back:hover{color:#3A5C38;}
+</style>
+<nav class="site-nav">
+  <a href="index.html" class="logo">ELT<span>Latvia</span></a>
+  <a href="index.html" class="site-nav-back">← Atpakaļ uz sākumu</a>
+</nav>
+<div class="app">
+<header>
+  <div class="hdr-label">Latvian CE · English</div>
+  <h1>Speaking Practice</h1>
+  <p style="margin-top:.6rem;font-size:.78rem;color:var(--muted);line-height:1.6;max-width:640px;margin-left:auto;margin-right:auto">This resource was developed using official Latvian CE exam papers published by VIAA/VISC. AI assistance was used in developing practice content and may contain inaccuracies. The creator of this resource accepts no responsibility for errors or omissions. For authoritative exam preparation, refer to official VIAA materials at <a href="https://viaa.gov.lv" style="color:#5E8560">viaa.gov.lv</a>.</p>
+</header>
+
+<!-- LEVEL SELECT -->
+<div class="screen active" id="screen-level">
+  <div class="section-title">Select exam level</div>
+  <div class="two-grid">
+    <div class="big-card" onclick="setLevel('al')">
+      <div class="bc-icon">🎓</div>
+      <div class="bc-badge">Advanced Level</div>
+      <div class="bc-title">AL — Augstākais līmenis</div>
+      <div class="bc-desc">5–6 source fragments per paper. 20-minute preparation, 5–6 minute structured speech, then Q&A.</div>
+      <div class="bc-pills"><span class="bc-pill">C1 target</span><span class="bc-pill">24 papers</span><span class="bc-pill">2024 &amp; 2025</span></div>
+    </div>
+    <div class="big-card" onclick="setLevel('ol')">
+      <div class="bc-icon">💬</div>
+      <div class="bc-badge">Optimal Level</div>
+      <div class="bc-title">OL — Optimālais līmenis</div>
+      <div class="bc-desc">2 source materials per paper. 5-minute preparation, 3–5 minute debate-style talk, then Q&A.</div>
+      <div class="bc-pills"><span class="bc-pill">B2 target</span><span class="bc-pill">35 papers</span><span class="bc-pill">2024 &amp; 2025</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODE SELECT -->
+<div class="screen" id="screen-mode">
+  <div class="btn-row" style="margin-bottom:1.2rem">
+    <button class="btn btn-ghost btn-sm" onclick="goLevel()">← Change level</button>
+    <span id="mode-level-badge"></span>
+  </div>
+  <div class="section-title">Select practice mode</div>
+  <div class="two-grid">
+    <div class="big-card" onclick="setMode('full')">
+      <div class="bc-icon">🎙️</div>
+      <div class="bc-title">Full Simulation</div>
+      <div class="bc-desc">Timed preparation, talk stage with live timer, then Q&A questions one by one.</div>
+      <div class="bc-pills" id="mode-full-pills"></div>
+    </div>
+    <div class="big-card" onclick="setMode('qa')">
+      <div class="bc-icon">💬</div>
+      <div class="bc-title">Q&amp;A Only</div>
+      <div class="bc-desc">Jump straight to the three follow-up questions. Relevant quotes shown where applicable.</div>
+      <div class="bc-pills"><span class="bc-pill">All 3 questions</span><span class="bc-pill">Hints available</span><span class="bc-pill">1:30 timer</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAPER SELECT -->
+<div class="screen" id="screen-select">
+  <div class="btn-row" style="margin-bottom:1.2rem">
+    <button class="btn btn-ghost btn-sm" onclick="goMode()">← Change mode</button>
+    <span id="select-badge"></span>
+  </div>
+  <div class="big-card" onclick="randomisePaper()" style="margin-bottom:1.5rem;border-color:var(--amber);display:flex;align-items:center;gap:1.2rem;padding:1.2rem 1.4rem">
+    <span style="font-size:2rem">🎲</span>
+    <div><div class="bc-title" style="margin-bottom:.2rem">Randomise</div><div class="bc-desc">Let the tool pick a paper for you — no choosing allowed.</div></div>
+  </div>
+  <div id="select-year-sections"></div>
+</div>
+
+<!-- RANDOM REVEAL -->
+<div class="screen" id="screen-random">
+  <div class="btn-row" style="margin-bottom:1.5rem">
+    <button class="btn btn-ghost btn-sm" onclick="goSelect()">← Back to papers</button>
+  </div>
+  <div class="topic-banner" style="text-align:center">
+    <div class="tb-label">Your paper is</div>
+    <h2 id="rand-topic" style="margin:.4rem 0"></h2>
+    <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:rgba(255,255,255,.6);margin-top:.4rem" id="rand-meta"></div>
+  </div>
+  <div class="btn-row" style="justify-content:center;margin-top:1.5rem;gap:1rem">
+    <button class="btn btn-primary" onclick="startRandomPaper()">Start →</button>
+    <button class="btn btn-amber" onclick="randomisePaper()">🎲 Re-roll</button>
+    <button class="btn btn-ghost" onclick="goSelect()">← Choose manually</button>
+  </div>
+</div>
+
+<!-- PREP -->
+<div class="screen" id="screen-prep">
+  <div class="btn-row" style="margin-bottom:.8rem">
+    <button class="btn btn-ghost btn-sm" onclick="goSelect()">← Back to papers</button>
+  </div>
+  <div class="stage-pills">
+    <div class="stage-pill active">Preparation</div>
+    <div class="stage-pill">Talk</div>
+    <div class="stage-pill">Q &amp; A</div>
+  </div>
+  <div class="topic-banner">
+    <div class="tb-label">Your Topic</div>
+    <h2 id="prep-topic"></h2>
+    <div class="tb-context" id="prep-context"></div>
+  </div>
+  <div class="instr-box" id="prep-instr"></div>
+  <div id="prep-sources"></div>
+  <button class="btn-hint" onclick="togglePanel('prep-planner',this)">💡 Talk Planner</button>
+  <div class="scaffold-panel" id="prep-planner">
+    <h4 id="planner-title">Talk Planner</h4>
+    <div class="scaffold-dj" id="planner-dj"></div>
+    <div id="planner-steps"></div>
+  </div>
+  <div class="timer-display">
+    <div class="timer-clock" id="prep-clock"></div>
+    <div class="timer-sublabel" id="prep-timer-label">preparation time remaining</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prep-bar" style="width:100%"></div></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="btn-start-prep">▶ Start Timer</button>
+    <button class="btn btn-amber" id="btn-ready-talk" style="display:none" onclick="goTalk()">Ready — Begin Talk →</button>
+    <div id="prep-sample-slot"></div>
+    <button class="btn btn-ghost btn-sm" onclick="goSelect()">← Back</button>
+  </div>
+</div>
+
+<!-- TALK -->
+<div class="screen" id="screen-talk">
+  <div class="stage-pills">
+    <div class="stage-pill done">Preparation ✓</div>
+    <div class="stage-pill active">Talk</div>
+    <div class="stage-pill">Q &amp; A</div>
+  </div>
+  <div class="btn-row" style="margin-bottom:.8rem">
+    <button class="btn btn-ghost btn-sm" onclick="setupPrepScreen();showScreen('prep')">← Back to Preparation</button>
+  </div>
+  <div class="topic-banner">
+    <div class="tb-label" id="talk-label">Speak for 5 minutes on</div>
+    <h2 id="talk-topic"></h2>
+  </div>
+  <div class="materials-box">
+    <h3>Cover in your talk</h3>
+    <ul class="prompts-ul" id="talk-checklist"></ul>
+  </div>
+  <button class="btn-hint" onclick="togglePanel('criteria-panel',this)">💡 Criteria Reminder</button>
+  <div class="scaffold-panel" id="criteria-panel">
+    <h4 id="criteria-title">What the examiner is looking for</h4>
+    <ul class="crit-list" id="criteria-list"></ul>
+  </div>
+  <div class="rec-row"><span class="rec-indicator"><span class="rec-dot"></span>SPEAKING</span></div>
+  <div class="timer-display">
+    <div class="timer-clock" id="talk-clock">5:00</div>
+    <div class="timer-sublabel" id="talk-timer-label">talk time remaining</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="talk-bar" style="width:100%;background:var(--sage)"></div></div>
+  <div class="btn-row">
+    <button class="btn btn-sage" onclick="goQA()">Finished — Go to Q&amp;A →</button>
+    <div id="talk-sample-slot"></div>
+  </div>
+</div>
+
+<!-- Q&A FULL -->
+<div class="screen" id="screen-qa">
+  <div class="btn-row" style="margin-bottom:.8rem">
+    <button class="btn btn-ghost btn-sm" onclick="clearInterval(talkInterval);showScreen('talk')">← Back to Talk</button>
+  </div>
+  <div class="stage-pills">
+    <div class="stage-pill done">Preparation ✓</div>
+    <div class="stage-pill done">Talk ✓</div>
+    <div class="stage-pill active">Q &amp; A</div>
+  </div>
+  <div id="qa-sample-slot"></div>
+  <div id="qa-slot"></div>
+  <div class="btn-row">
+    <button class="btn btn-sage" id="btn-next-q" onclick="nextQuestion()">Next Question →</button>
+  </div>
+  <div class="nav-hint" id="qa-nav-hint"></div>
+</div>
+
+<!-- Q&A ONLY -->
+<div class="screen" id="screen-qaonly">
+  <div class="btn-row" style="margin-bottom:1.2rem">
+    <button class="btn btn-ghost btn-sm" onclick="goSelect()">← Choose another paper</button>
+  </div>
+  <div class="topic-banner">
+    <div class="tb-label">Q &amp; A Practice</div>
+    <h2 id="qaonly-topic"></h2>
+  </div>
+  <div class="section-title">All three follow-up questions</div>
+  <div class="qaonly-list" id="qaonly-list"></div>
+  <div style="background:var(--paper);border:1.5px solid var(--dust);border-radius:10px;padding:1.2rem 1.3rem;margin-top:1.5rem;">
+    <div class="section-title" style="margin-top:0;margin-bottom:.7rem">Per-question answer timer</div>
+    <div class="qa-timer-row">
+      <div><div class="qa-clock" id="qaonly-clock">1:30</div><div class="qa-timer-label">per question</div></div>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-amber btn-sm" id="btn-qaonly-start" onclick="startQAOnlyTimer()">▶ Start</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetQAOnlyTimer()">↺ Reset</button>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="qaonly-bar" style="width:100%"></div></div>
+    <div class="nav-hint" id="qaonly-hint" style="text-align:left">Press Start when you begin answering. Reset between questions.</div>
+  </div>
+</div>
+
+<!-- SAMPLE ANSWER -->
+<div class="screen" id="screen-sample">
+  <div class="btn-row" style="margin-bottom:1.2rem">
+    <button class="btn btn-ghost btn-sm" id="sa-back-btn" onclick="goSampleBack()">← Back</button>
+  </div>
+  <div class="topic-banner">
+    <div class="tb-label">Sample Answer</div>
+    <h2 id="sa-topic"></h2>
+  </div>
+  <div class="sa-disclaimer">This model answer was generated with AI assistance and edited for pedagogical purposes. It is intended as a learning tool, not a perfect exam answer.</div>
+  <div class="sa-legend">
+    <div class="sa-legend-item"><div class="sa-legend-dot" style="background:#7aaa7a"></div><span>works well</span></div>
+    <div class="sa-legend-item"><div class="sa-legend-dot" style="background:#c8aa5a"></div><span>underdeveloped</span></div>
+    <div class="sa-legend-item"><div class="sa-legend-dot" style="background:#c48080"></div><span>missing or ineffective</span></div>
+  </div>
+  <div class="sa-task"><strong>Before you reveal:</strong> Read the text below. For each part of the talk, consider — what function does it serve, and how well does it do its job? Then reveal the annotations one by one to check.</div>
+  <div class="sa-controls">
+    <button class="btn btn-primary btn-sm" id="btn-sa-reveal" onclick="saRevealNext()">Reveal</button>
+    <span class="sa-counter" id="sa-counter">0 / 0</span>
+    <button class="btn btn-ghost btn-sm" onclick="saReset()">↺ Start over</button>
+  </div>
+  <div class="sa-grid">
+    <div class="sa-text-col" id="sa-text-col"></div>
+    <div class="sa-ann-col" id="sa-ann-col"></div>
+  </div>
+</div>
+
+<!-- DONE -->
+<div class="screen" id="screen-done">
+  <div class="done-banner"><h2>Practice Complete 🎉</h2><p>Well done — you have completed the full speaking task simulation.</p></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="goSelect()">Practice another paper</button>
+    <button class="btn btn-ghost" onclick="goMode()">Change mode</button>
+    <button class="btn btn-ghost" onclick="goLevel()">Change level</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// CHART RENDERING HELPERS
+// ══════════════════════════════════════════════════════════
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function renderHBar(src){
+  const{title,data,unit='%',scale}=src;
+  const max=scale!==undefined?scale:(unit==='%'?100:Math.max(...data.map(d=>parseFloat(d.value)))*1.15);
+  const lw=195,bw=185,vw=58,W=lw+bw+vw;
+  const rH=29,top=title?24:8,H=top+data.length*rH+10;
+  const tEl=title?`<text x="0" y="15" font-size="9.5" font-family="DM Mono,monospace" fill="#7a6e5e" font-weight="500">${esc(title)}</text>`:'';
+  const bars=data.map((d,i)=>{
+    const val=parseFloat(d.value);
+    const bl=Math.max(3,(val/max)*bw);
+    const y=top+i*rH;
+    return `<text x="${lw-7}" y="${y+rH/2+4}" text-anchor="end" font-size="11" font-family="DM Sans,sans-serif" fill="#7a6e5e">${esc(d.label)}</text><rect x="${lw}" y="${y+4}" width="${bl}" height="${rH-10}" fill="#c8832a" rx="2" opacity=".82"/><text x="${lw+bl+5}" y="${y+rH/2+4}" font-size="10.5" font-family="DM Mono,monospace" fill="#1a1208">${d.value}${unit}</text>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;display:block;margin:.35rem 0">${tEl}${bars}</svg>`;
+}
+
+function renderGroupedBar(src){
+  const{title,groups}=src;
+  let h=`<div style="margin:.3rem 0">`;
+  if(title)h+=`<p style="font-family:'DM Mono',monospace;font-size:9.5px;color:#7a6e5e;margin-bottom:.55rem;letter-spacing:.05em;font-weight:500">${escH(title)}</p>`;
+  h+=`<div style="display:flex;gap:1.2rem;margin-bottom:.5rem;font-size:.72rem;font-family:'DM Mono',monospace;flex-wrap:wrap"><span style="display:flex;align-items:center;gap:.3rem"><span style="width:11px;height:8px;background:#c8832a;border-radius:2px;display:inline-block;opacity:.82"></span>Very/somewhat difficult</span><span style="display:flex;align-items:center;gap:.3rem"><span style="width:11px;height:8px;background:#4a7c5e;border-radius:2px;display:inline-block;opacity:.75"></span>Very/somewhat easy</span></div>`;
+  groups.forEach(g=>{
+    const mw=170;
+    const v0=g.values[0],v1=g.values[1];
+    const b0=Math.max(3,(v0.value/100)*mw),b1=Math.max(3,(v1.value/100)*mw);
+    h+=`<div style="margin-bottom:.65rem"><div style="font-size:.8rem;color:#7a6e5e;margin-bottom:.28rem">${escH(g.label)}</div><div style="display:flex;align-items:center;gap:.5rem;margin-bottom:3px"><div style="width:${b0}px;height:13px;background:#c8832a;border-radius:2px;opacity:.82;flex-shrink:0"></div><span style="font-family:'DM Mono',monospace;font-size:.72rem;color:#1a1208">${v0.value}%</span></div><div style="display:flex;align-items:center;gap:.5rem"><div style="width:${b1}px;height:13px;background:#4a7c5e;border-radius:2px;opacity:.75;flex-shrink:0"></div><span style="font-family:'DM Mono',monospace;font-size:.72rem;color:#1a1208">${v1.value}%</span></div></div>`;
+  });
+  return h+'</div>';
+}
+
+function renderDataTable(src){
+  const{title,sections}=src;
+  let h=`<div style="margin:.3rem 0">`;
+  if(title)h+=`<p style="font-family:'DM Mono',monospace;font-size:9.5px;color:#7a6e5e;margin-bottom:.55rem;letter-spacing:.05em;font-weight:500">${escH(title)}</p>`;
+  sections.forEach(s=>{
+    h+=`<p style="font-size:.8rem;font-weight:600;color:#1a1208;margin:.55rem 0 .22rem;font-family:'DM Sans',sans-serif">${escH(s.heading)}</p>`;
+    s.rows.forEach(r=>{h+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:.2rem 0;border-bottom:1px solid #d4c9b0"><span style="font-size:.82rem;color:#7a6e5e">${escH(r.label)}</span><span style="font-family:'DM Mono',monospace;font-size:.78rem;font-weight:500;color:#1a1208">${escH(r.value)}</span></div>`;});
+  });
+  return h+'</div>';
+}
+
+function renderBullet(src){
+  const{intro,items}=src;
+  let h='';
+  if(intro)h+=`<p style="font-size:.84rem;line-height:1.55;color:#1a1208;margin-bottom:.45rem">${intro}</p>`;
+  h+='<div style="display:flex;flex-direction:column;gap:.28rem">';
+  items.forEach(item=>{h+=`<div style="display:flex;gap:.5rem;font-size:.83rem;line-height:1.5"><span style="color:#c8832a;flex-shrink:0;margin-top:.05rem">•</span><span style="color:#1a1208">${item}</span></div>`;});
+  return h+'</div>';
+}
+
+function renderSource(src,label){
+  let inner='';
+  if(src.type==='text') inner=`<div class="source-text-body">${escH(src.content)}</div>`;
+  else if(src.type==='chart_h') inner=renderHBar(src);
+  else if(src.type==='chart_grouped') inner=renderGroupedBar(src);
+  else if(src.type==='data_table') inner=renderDataTable(src);
+  else if(src.type==='bullet') inner=renderBullet(src);
+  return `<div class="source-block"><div class="source-label-tag">${label}</div>${inner}<div class="source-attr">${escH(src.attribution)}</div></div>`;
+}
+
+// ══════════════════════════════════════════════════════════
+// AL DATA
+// ══════════════════════════════════════════════════════════
+const AL={
+  2024:[
+    {num:"1",topic:"Thoughts and Facts",quotes:[{text:"The fact that an opinion has been widely held is no evidence whatever that it is not utterly absurd; indeed in view of the silliness of the majority of mankind, a widely spread belief is more likely to be foolish than sensible.",source:"Bertrand Russell, British mathematician"},{text:"Every man has the right to an opinion but no man has a right to be wrong in his facts. Nor, above all, to persist in errors as to facts.",source:"Bernard Baruch, American financier"},{text:"Facts are the fundamental building blocks of science, but bringing those facts together to have an insight of a certain phenomenon requires a rational, conscientious and creative mind.",source:"Abhijit Naskar, neuroscientist"},{text:"The great enemy of truth is very often not the lie — deliberate, contrived and dishonest — but the myth — persistent, persuasive and unrealistic. Too often we hold fast to the clichés of our forebears. We enjoy the comfort of opinion without the discomfort of thought.",source:"John F. Kennedy, 35th U.S. President"},{text:"Facts are stubborn things; and whatever may be our wishes, our inclinations, or the dictates of our passions, they cannot alter the state of facts and evidence.",source:"John Adams, 2nd U.S. President"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What issue does Kennedy's quote raise?",quoteRef:{text:"The great enemy of truth is very often not the lie — deliberate, contrived and dishonest — but the myth — persistent, persuasive and unrealistic. Too often we hold fast to the clichés of our forebears. We enjoy the comfort of opinion without the discomfort of thought.",source:"John F. Kennedy, 35th U.S. President"}},{q:"Why is it important to be able to distinguish between facts and opinions in various aspects of life?",quoteRef:null}]},
+    {num:"2",topic:"The Road to Discovery",quotes:[{text:"The important thing is not to stop questioning. Curiosity has its own reason for existence. One cannot help but be in awe when he contemplates the mysteries of eternity, of life, of the marvellous structure of reality.",source:"Albert Einstein, physicist"},{text:"While researchers strive to expand the frontiers of human faculties, the products of their endeavors tend to dull the creative urge of mankind at large.",source:"BS Murthy, Indian novelist"},{text:"Complex tools using artificial intelligence can efficiently analyze data as well as generate new hypotheses and theories. Along with AI becoming increasingly prevalent in our daily lives, its application to different scientific domains is becoming more widespread.",source:"Bartlett et al., Perspectives on Psychological Science, 2023"},{text:"We live in a science-fiction age. Yesterday's fantasy is already today's fact; and today's imaginings, well, perhaps only 24 hours from now, they too will have come to pass.",source:"Science Fiction Digest, 1954"},{text:"Our real discoveries come from chaos, from going to the place that looks wrong and stupid and foolish.",source:"Chuck Palahniuk, American novelist"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What can you infer from Murthy's quote?",quoteRef:{text:"While researchers strive to expand the frontiers of human faculties, the products of their endeavors tend to dull the creative urge of mankind at large.",source:"BS Murthy, Indian novelist"}},{q:"How might artificial intelligence affect the process of scientific discovery?",quoteRef:null}]},
+    {num:"3",topic:"Time Management",quotes:[{text:"In a nationally representative cross-occupational survey, we found that idle time occurs frequently across all occupational categories; we estimate that employers in the United States pay roughly $100 billion in wages for time that employees spend idle.",source:"Brodsky & Amabile, 2018"},{text:"The best moments in our lives are not the passive, receptive, relaxing times. The best moments usually occur if a person's body or mind is stretched to its limits in a voluntary effort to accomplish something difficult and worthwhile.",source:"Flow: The Psychology of Optimal Experience"},{text:"The problem with trying to make time for everything that feels important is that you definitely never will. There's no reason to believe you'll ever feel 'on top of things,' or make time for everything that matters, simply by getting more done.",source:"Oliver Burkeman, British author and journalist"},{text:"In this world, one of the biggest illusions that we live in is that we have unlimited time. With that mindset, we are uncontrolled to waste it as much as we can.",source:"Neeraj Agnihotri, author"},{text:"There are always a handful of roles that each of us is juggling. Sometimes it can be difficult to even take basic care of ourselves — but there are small things that can be done to make self-care a little bit easier.",source:"Mental Health America"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"How do you interpret Burkeman's quote?",quoteRef:{text:"The problem with trying to make time for everything that feels important is that you definitely never will. There's no reason to believe you'll ever feel 'on top of things,' or make time for everything that matters, simply by getting more done.",source:"Oliver Burkeman, British author and journalist"}},{q:"How can individuals balance short-term tasks and achieve long-term goals?",quoteRef:null}]},
+    {num:"4",topic:"Language and Communication",quotes:[{text:"Language has played a pivotal role in human evolution. It is widely believed that human language emerged around 50,000 to 100,000 years ago. Prior to this, our ancestors communicated using grunts, gestures, and other basic sounds.",source:"The Evolution of Language, medium.com"},{text:"86% of employees and executives blame the lack of effective collaboration and communication as the leading causes for errors in the workplace.",source:"apollotechnical.com"},{text:"In face-to-face communication, most of what we convey goes through body language or tone of voice. When communicating through writing — the medium of 99% of the internet — it becomes much easier to misunderstand the implicit meaning of a message.",source:"youthtimemag.com"},{text:"You don't realize how language actually interferes with communication until you don't have it, how it gets in the way like an overdominant sense. Words aren't always the most reliable thing.",source:"Lily King, American novelist"},{text:"The great enemy of communication is the illusion of it. Human beings have the habit of talking and writing too much without conveying any meaning.",source:"Pierre Martineau, Motivation in Advertising, 1957"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What issue does Martineau's quote raise?",quoteRef:{text:"The great enemy of communication is the illusion of it. Human beings have the habit of talking and writing too much without conveying any meaning.",source:"Pierre Martineau, Motivation in Advertising, 1957"}},{q:"How could communication breakdowns be avoided?",quoteRef:null}]},
+    {num:"5",topic:"The Power of Expectations",quotes:[{text:"We live within a structure of social expectations, of belief, awareness, and apprehension of how others will react to our behavior. As we behave toward others, we also apprehend how our behavior will affect them and what we can expect in return.",source:"R.J. Rummel, American political scientist"},{text:"Change will not come if we wait for some other person or some other time. We are the ones we've been waiting for. We are the change that we seek.",source:"Barack Obama, 44th U.S. President"},{text:"Young people are now facing more competitive environments, more unrealistic expectations, and more anxious and controlling parents than generations before.",source:"Curran & Hill, 2019"},{text:"Normal is getting dressed in clothes that you buy for work and driving through traffic in a car that you are still paying for — in order to get to the job you need to pay for the clothes and the car, and the house you leave vacant all day so you can afford to live in it.",source:"Ellen Goodman, Pulitzer Prize-winning author"},{text:"Treat a man as he is and he will remain as he is. Treat a man as he can and should be and he will become as he can and should be.",source:"Stephen R. Covey, American educator and author"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What issue does Ellen Goodman's quote raise?",quoteRef:{text:"Normal is getting dressed in clothes that you buy for work and driving through traffic in a car that you are still paying for — in order to get to the job you need to pay for the clothes and the car, and the house you leave vacant all day so you can afford to live in it.",source:"Ellen Goodman, Pulitzer Prize-winning author"}},{q:"What could help young people cope with social pressure?",quoteRef:null}]},
+    {num:"6",topic:"Global Citizenship",quotes:[{text:"Global citizenship has numerous benefits that extend beyond personal growth and development such as increased cultural understanding, improved communication skills, enhanced problem-solving skills and greater career opportunities.",source:"globalcitizenyear.org"},{text:"You are a valuable instrument in the orchestration of your own world, and the overall harmony of the universe.",source:"Suzy Kassem, American writer and poet"},{text:"The world needs global citizenship education more than ever before, as humanity is plagued by poverty and adverse climate change impacts. Global citizenship education is critical to breaking barriers in development.",source:"mgiep.unesco.org"},{text:"The world is facing multiple compounding crises. But look around, and the world is also full of remarkable individuals, dedicating themselves to the fight to uplift the most vulnerable and achieve equality and justice for all.",source:"globalcitizen.org"},{text:"For the first time in 15 years of tracking, nearly one in two people (49%) surveyed across 14 countries see themselves more as global citizens than citizens of their country.",source:"globescan.com"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What issue does Kassem's quote raise?",quoteRef:{text:"You are a valuable instrument in the orchestration of your own world, and the overall harmony of the universe.",source:"Suzy Kassem, American writer and poet"}},{q:"How can global awareness and engagement contribute to the well-being and progress of the local community?",quoteRef:null}]},
+    {num:"D1",topic:"In Search of Truth",quotes:[{text:"There is beauty in truth, even if it's painful. Those who lie, twist life so that it looks tasty to the lazy, brilliant to the ignorant, and powerful to the weak. But lies only strengthen our defects.",source:"José N. Harris, author"},{text:"In the tapestry of truth, white lies are the threads that delicately weave the fabric of harmony. They protect feelings, shield egos, and oil the gears of social machinery.",source:"ChatGPT"},{text:"A lie is an act of self-abdication, because one surrenders one's reality to the person to whom one lies, making that person one's master… there are no white lies, there is only the blackest of destruction, and a white lie is the blackest of all.",source:"Ayn Rand, Atlas Shrugged, 1957"},{text:"According to a study conducted by the University of Notre Dame, participants lied an average of 1.65 times a day. The most common lie was 'I'm fine' when someone is not actually feeling okay.",source:"Judah Schiller, Lying Statistics & Facts"},{text:"The truth is a beautiful and terrible thing, and should therefore be treated with great caution.",source:"Dumbledore, Harry Potter and the Sorcerer's Stone (J.K. Rowling)"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"How do you understand Ayn Rand's quote?",quoteRef:{text:"A lie is an act of self-abdication, because one surrenders one's reality to the person to whom one lies, making that person one's master… there are no white lies, there is only the blackest of destruction, and a white lie is the blackest of all.",source:"Ayn Rand, Atlas Shrugged, 1957"}},{q:"Why is truth sometimes seen as subjective?",quoteRef:null}]},
+    {num:"D2",topic:"Who Are We and Where Are We Going?",quotes:[{text:"Why waste time proving over and over how great you are, when you could be getting better? Why look for friends or partners who will just shore up your self-esteem instead of ones who will also challenge you to grow?",source:"Carol S. Dweck, Mindset: The New Psychology of Success"},{text:"The saddest aspect of life right now is that science gathers knowledge faster than society gathers wisdom.",source:"Isaac Asimov, American writer and professor"},{text:"Innovation is easier said than done. It often requires you to collaborate with others, overcome resistance from stakeholders, and invest valuable time and resources into generating solutions.",source:"Boyles M., Innovation in Business, 2022"},{text:"We are just an advanced breed of monkeys on a minor planet of a very average star. But we can understand the Universe. That makes us something very special.",source:"Stephen Hawking, English theoretical physicist and cosmologist"},{text:"We know very little, and yet it is astonishing that we know so much, and still more astonishing that so little knowledge can give us so much power.",source:"Bertrand Russell, British mathematician and philosopher"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"How do you understand Asimov's quote?",quoteRef:{text:"The saddest aspect of life right now is that science gathers knowledge faster than society gathers wisdom.",source:"Isaac Asimov, American writer and professor"}},{q:"What moral dilemmas are connected with progress and accumulation of knowledge?",quoteRef:null}]},
+    {num:"D3",topic:"Young People's Social Participation",quotes:[{text:"Today's young people are highly motivated to generate positive social change. Social entrepreneurship may have great potential to mobilize youth to engage in efforts to achieve major social objectives.",source:"Holt & Littlewood, 2014"},{text:"We cannot always build the future for our youth, but we can build our youth for the future.",source:"Franklin D. Roosevelt, 32nd U.S. President"},{text:"Youth changemakers share a growth mindset, personal agency and self-efficacy, optimism and hope, empathy, a 'we' focus, and intrinsic motivation and passion for making the world a better place.",source:"perspectivesblog.sagepub.com"},{text:"Young people who are supported to participate in decision-making are more likely to have increased confidence and self-belief, exercise positive career choices and have greater involvement in the future.",source:"myd.govt.nz"},{text:"A majority (58%) of young people are active in the societies they live in. Young people's most common expectation is for decision-makers to listen more to their demands and act on them.",source:"Eurobarometer, erasmus-plus.ec.europa.eu"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What issue does Roosevelt's quote raise?",quoteRef:{text:"We cannot always build the future for our youth, but we can build our youth for the future.",source:"Franklin D. Roosevelt, 32nd U.S. President"}},{q:"What could communities do to encourage and support youth social participation?",quoteRef:null}]},
+    {num:"D4",topic:"Science and Scientists",quotes:[{text:"If I have seen further, it is by standing upon the shoulders of giants.",source:"Sir Isaac Newton, English physicist and mathematician"},{text:"Too great a burden of knowledge can clog the wheels of imagination. When a distinguished but elderly scientist states that something is impossible, he is very probably wrong.",source:"Arthur C. Clarke, Hazards of Prophecy, 1962"},{text:"Youth Participatory Action Research works with participants, rather than on or for them. Children and youth become co-researchers in partnership with adults to develop research questions and share their results for real-world change.",source:"blogs.dal.ca"},{text:"Between 2014 and 2018, the researcher pool grew three times faster (13.7%) than the global population (4.6%). This translates into 8.854 million full-time equivalent researchers by 2018.",source:"UNESCO Science Report, 2021"},{text:"The scientific man does not aim at an immediate result. He does not expect that his advanced ideas will be readily taken up. His work is like that of the planter — for the future. His duty is to lay the foundation for those who are to come, and point the way.",source:"Nikola Tesla, Problem of Increasing Human Energy"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What can you infer from Tesla's quote?",quoteRef:{text:"The scientific man does not aim at an immediate result. He does not expect that his advanced ideas will be readily taken up. His work is like that of the planter — for the future. His duty is to lay the foundation for those who are to come, and point the way.",source:"Nikola Tesla, Problem of Increasing Human Energy"}},{q:"What ethical considerations should be taken into account in scientific research? Why?",quoteRef:null}]},
+    {num:"D5",topic:"Mathematical Thinking",quotes:[{text:"Children need math. As they grow, they need to learn patience and discipline. Patience is precisely what math teaches us. It also teaches us curiosity — why is this rule used here? Why would that number be negative?",source:"medium.com"},{text:"Mathematics is not about numbers, equations, computations, or algorithms: it is about understanding.",source:"William Paul Thurston, American mathematician"},{text:"In an increasingly data-driven society the ability to analyze data, statistics and charts and graphs is a key component of critical thinking.",source:"insidehighered.com"},{text:"We shouldn't be excluding the vast majority of kids from learning practical life skills they need to succeed in life.",source:"Richard Branson, British business magnate"},{text:"Until we stop thinking being bad at math is funny, it will continue to be socially acceptable.",source:"Kelly Dickerson, businessinsider.com, 2013"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"How do you understand Thurston's quote?",quoteRef:{text:"Mathematics is not about numbers, equations, computations, or algorithms: it is about understanding.",source:"William Paul Thurston, American mathematician"}},{q:"How can the process of solving maths problems enhance our ability to think critically?",quoteRef:null}]},
+    {num:"D6",topic:"Fame",quotes:[{text:"82.5% of respondents affirmed that they were exposed to celebrity shows and celebrity lifestyle programmes. Despite their willingness to pursue higher education, they would take any opportunity that would make them famous over higher education.",source:"Aderonke & Adinlewa, 2020"},{text:"I'm not a rock star. Sure I am, to a certain extent because of the situation, but when kids ask me how it feels to be a rock star, I say leave me alone, I'm not a rock star. I'm not in it for the fame, I'm in it because I like to play.",source:"Eddie Van Halen, American musician"},{text:"Once fame hits, with its growing sense of isolation, mistrust, and lack of personal privacy, the person develops a kind of character-splitting between the 'celebrity self' and the 'authentic self'.",source:"Rockwell, Donna, saybrook.edu, 2012"},{text:"About 30% of adults report regularly daydreaming about being famous, and more than 40% expect to enjoy some passing dose of fame at some point in life.",source:"Carey, Benedict, The New York Times, 2006"},{text:"Social media fame is more fragile and less likely to endure compared to the celebrity of actors and musicians. Influencers' success relies on their ability to maintain an emotional connection with their fans, which can change quickly.",source:"Rutledge, Pamela B., Psychology Today, 2021"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What issue does Eddie Van Halen's quote raise?",quoteRef:{text:"I'm not a rock star. Sure I am, to a certain extent because of the situation, but when kids ask me how it feels to be a rock star, I say leave me alone, I'm not a rock star. I'm not in it for the fame, I'm in it because I like to play.",source:"Eddie Van Halen, American musician"}},{q:"How does society's preoccupation with fame shape our values and aspirations?",quoteRef:null}]}
+  ],
+  2025:[
+    {num:"1",topic:"Memory and Memories",quotes:[{text:"Your memory is a monster; you forget — it doesn't. It simply files things away. It keeps things for you, or hides things from you — and summons them to your recall with a will of its own. You think you have a memory; but it has you!",source:"John Irving, A Prayer for Owen Meany, 1989"},{text:"Sooner or later we all discover that the important moments in life are not the advertised ones. The real milestones come to the door of memory unannounced, stray dogs that amble in, sniff around a bit and simply never leave.",source:"Susan B. Anthony, The Ghost in My Life, 1971"},{text:"Through remembering, individuals and collectives establish a continuity between the past, present, and future. This process, in turn, shapes their identities, behavior, attitudes, and choice.",source:"Bachleitner, K., Progress in brain research, 2022"},{text:"Memory naturally lets drop the facts which are less flattering to our self-love — when it does not retain them carefully as subjects not to be approached, marshy spots with a warning flag over them.",source:"George Eliot, The Wasp Credited with the Honey-Comb, 1879"},{text:"A scant 30% of our memories stand as accurate. This highlights how savory nostalgic reminiscences can sometimes be shrouded in the veil of inaccuracy.",source:"Gitnux Marketdata Report 2024"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What can you infer from Irving's quote?",quoteRef:{text:"Your memory is a monster; you forget — it doesn't. It simply files things away. It keeps things for you, or hides things from you — and summons them to your recall with a will of its own. You think you have a memory; but it has you!",source:"John Irving, A Prayer for Owen Meany, 1989"}},{q:"To what extent can historians draw on individual and collective memories?",quoteRef:null}]},
+    {num:"2",topic:"Application of Technology",quotes:[{text:"In 2025, two-thirds of global tech spending will come from software and IT services, and in Europe and North America, this share of tech spending will be even higher.",source:"Gitnux Marketdata Report 2024; forrester.com"},{text:"Before you become too entranced with gorgeous gadgets and mesmerizing video displays, let me remind you that information is not knowledge, knowledge is not wisdom, and wisdom is not foresight. Each grows out of the other, and we need them all.",source:"Arthur C. Clarke, British fiction writer"},{text:"The most important and urgent problems of the technology of today are no longer the satisfactions of the primary needs or of archetypal wishes, but the reparation of the evils and damages by technology of yesterday.",source:"Dennis Gabor, Hungarian-British engineer and physicist"},{text:"Every man lives in two realms, the internal and the external. Our problem today is that we have allowed the internal to become lost in the external.",source:"Martin Luther King, Nobel Peace Prize acceptance lecture, 1964"},{text:"Our inventions are wont to be pretty toys, which distract our attention from serious things. They are but improved means to an unimproved end.",source:"Henry David Thoreau, Walden, 1854"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What issue does Gabor's quote raise?",quoteRef:{text:"The most important and urgent problems of the technology of today are no longer the satisfactions of the primary needs or of archetypal wishes, but the reparation of the evils and damages by technology of yesterday.",source:"Dennis Gabor, Hungarian-British engineer and physicist"}},{q:"What ethical dilemmas does technological development raise?",quoteRef:null}]},
+    {num:"3",topic:"Time",quotes:[{text:"Don't say you don't have enough time. You have exactly the same number of hours per day that were given to Helen Keller, Pasteur, Michelangelo, Mother Teresa, Leonardo da Vinci, Thomas Jefferson, and Albert Einstein.",source:"H. Jackson Brown Jr., American author"},{text:"Be sure you enjoy yourself wherever you are, even if others consider you are wasting your time; remember that time you enjoy wasting is not wasted time!",source:"Column 'Rilette Writes Again', The Gleaner, 1924"},{text:"88% of working people procrastinate daily. Furthermore, 31.9% said they procrastinate between 2 and 3 hours per day, 17% admit they waste up to 4 hours daily due to repeatedly putting off tasks.",source:"Gitnux Marketdata Report 2024"},{text:"We've been granted the mental capacities to make almost infinitely ambitious plans, yet practically no time at all to put them into action.",source:"Oliver Burkeman, Four Thousand Weeks: Time Management for Mortals, 2021"},{text:"Why do they not teach you that time is a finger snap and an eye blink, and that you should not allow a moment to pass you by without taking joyous, ecstatic note of it?",source:"Pat Conroy, My Losing Season: A Memoir, 2002"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What does Jackson Brown's quote imply?",quoteRef:{text:"Don't say you don't have enough time. You have exactly the same number of hours per day that were given to Helen Keller, Pasteur, Michelangelo, Mother Teresa, Leonardo da Vinci, Thomas Jefferson, and Albert Einstein.",source:"H. Jackson Brown Jr., American author"}},{q:"How can time management become counterproductive to a person's well-being?",quoteRef:null}]},
+    {num:"4",topic:"Learning from Experience",quotes:[{text:"What the human being is best at doing is interpreting all new information so that their prior conclusions remain intact.",source:"Warren Buffet, American businessman"},{text:"I recognize that I may be wrong. This makes me insecure. My sense of insecurity keeps me alert, always ready to correct my errors. To others, being wrong is a source of shame; to me, recognizing my mistakes is a source of pride. Once we realize that imperfect understanding is the human condition, there is no shame in being wrong, only in failing to correct our mistakes.",source:"George Soros, businessman and investor"},{text:"A new study of small business owners finds that being unsuccessful is an important part in learning how to become a winner. 88% of respondents say that to be successful, people can't be afraid to make mistakes.",source:"studyfinds.org"},{text:"We should be careful to get out of an experience only the wisdom that is in it and stop there lest we be like the cat that sits down on a hot stove lid. She will never sit down on a hot stove lid again — but also she will never sit down on a cold one anymore.",source:"Mark Twain, Following the Equator, 1897"},{text:"The only real mistake is the one from which we learn nothing.",source:"Henry Ford, American industrialist and business magnate"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What can you infer from Ford's quote?",quoteRef:{text:"The only real mistake is the one from which we learn nothing.",source:"Henry Ford, American industrialist and business magnate"}},{q:"To what extent does attitude to failure affect our willingness to take risks?",quoteRef:null}]},
+    {num:"5",topic:"Taking Action",quotes:[{text:"In our old hunter-gatherer environment, action trumped reflection. Lightning-fast reactions were essential to survival; deliberation could be fatal. However, our world today is different; it rewards reflection, even though our instincts may suggest otherwise.",source:"Rolf Dobelli, The Art of Thinking Clearly, 2014"},{text:"84% of young people want to help others but only 52% believe that they can make a positive difference in their community. Some young people believe that their age and inexperience are limiting but report building confidence through participation.",source:"thersa.org"},{text:"A person may cause evil to others not only by his actions but by his inaction, and in either case he is justly accountable to them for the injury.",source:"John Stuart Mill, On Liberty, 1859"},{text:"Every day that goes by without climate action is estimated to cost at least $254 million, based on recent trends, and the average yearly cost of inaction for the last five years has averaged $120.6 billion.",source:"actonclimate.com"},{text:"The greatest mistake you can make in life is to be continually fearing you will make one.",source:"Elbert Hubbard, The Philistine, 1901"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"How do you interpret John Stuart Mill's quote?",quoteRef:{text:"A person may cause evil to others not only by his actions but by his inaction, and in either case he is justly accountable to them for the injury.",source:"John Stuart Mill, On Liberty, 1859"}},{q:"When can taking action become harmful?",quoteRef:null}]},
+    {num:"6",topic:"Reciprocity",quotes:[{text:"Reciprocal behavior can be motivated not only by norms but also by different factors such as emotions and strategic considerations.",source:"Wörle, M., Paulus, M., Journal of Experimental Child Psychology, 2019"},{text:"Reciprocity has long been recognized as a universal cornerstone of morality, rational choice, and group life. Political scientists have shown that reciprocal behavioural strategies may lead in the long run to the highest level of outcomes.",source:"Buunk, B.P., Schaufeli, W.B., European Review of Social Psychology, 1999"},{text:"Err on the side of generosity. Not because you want something in return. Banking on reciprocity is a recipe for manipulation. Be generous because you're human and you care.",source:"Richie Norton, author and influencer"},{text:"Reciprocity: a situation or relationship in which two people or groups agree to do something similar to each other, to allow each other to have the same rights.",source:"The Britannica Dictionary"},{text:"Friendship — my definition — is built on two things. Respect and trust. Both elements have to be there. And it has to be mutual.",source:"Stieg Larsson, The Girl with the Dragon Tattoo, 2008"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What can you infer from Norton's quote?",quoteRef:{text:"Err on the side of generosity. Not because you want something in return. Banking on reciprocity is a recipe for manipulation. Be generous because you're human and you care.",source:"Richie Norton, author and influencer"}},{q:"To what extent can reciprocity in a professional setting be different from personal friendships?",quoteRef:null}]},
+    {num:"7",topic:"Cooperation and Relationships",quotes:[{text:"My model for business is The Beatles. They were four guys who kept each other's kind of negative tendencies in check. They balanced each other and the total was greater than the sum of the parts. Great things in business are never done by one person, they're done by a team of people.",source:"Steve Jobs, former CEO of Apple"},{text:"Everything you want in life is a relationship away.",source:"Idowu Koyenikan, Wealth for All, 2016"},{text:"Networking is not about just connecting people. It's about connecting people with people, people with ideas, and people with opportunities.",source:"Michele Jennae, Founder of influenSPHERE"},{text:"Competition increases performance, but collaboration increases learning.",source:"Marvin Marshall, Discipline Without Stress, 2007"},{text:"70% of college students believe networking is crucial for their future careers. 7 out of 10 recent graduates used campus networking events to make valuable connections.",source:"Gitnux Marketdata Report 2024"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What can you infer from Marshall's quote?",quoteRef:{text:"Competition increases performance, but collaboration increases learning.",source:"Marvin Marshall, Discipline Without Stress, 2007"}},{q:"What are the conditions of successful cooperation?",quoteRef:null}]},
+    {num:"8",topic:"Freedom of Opinion",quotes:[{text:"Everyone has the right to freedom of opinion and expression; this right includes the freedom to hold opinions without interference and to seek, receive and impart information and ideas through any media and regardless of frontiers.",source:"United Nations, Universal Declaration of Human Rights"},{text:"Words are, in my not-so-humble opinion, our most inexhaustible source of magic. Capable of both inflicting injury, and remedying it.",source:"Albus Dumbledore in Harry Potter and the Deathly Hallows (J.K. Rowling)"},{text:"Much might be said on the impossibility of fixing where these supposed bounds are to be placed… the free expression of all opinions should be permitted, on condition that the manner be temperate, and do not pass the bounds of fair discussion.",source:"John Stuart Mill, On Liberty, 1859"},{text:"Freedom of speech applies to ideas of all kinds, including those that may be deeply offensive. While international law protects free speech, there are instances where speech can be legitimately restricted — such as when it violates the rights of others, or advocates hatred and incites discrimination or violence.",source:"Amnesty International, Freedom of Expression"},{text:"According to a March 2022 survey in the United States, 80% of respondents agreed that the Internet makes it easier for people to share their views with a large number of people. Almost half agreed that the Internet should be a free speech zone where speech should be uncensored.",source:"statista.com"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What does the quote from Harry Potter imply?",quoteRef:{text:"Words are, in my not-so-humble opinion, our most inexhaustible source of magic. Capable of both inflicting injury, and remedying it.",source:"Albus Dumbledore in Harry Potter and the Deathly Hallows (J.K. Rowling)"}},{q:"What responsibilities come with the right to express opinions freely?",quoteRef:null}]},
+    {num:"9",topic:"Conformity",quotes:[{text:"Conformity refers to the act of matching attitudes, beliefs, and behaviours to group norms. Normative conformity occurs when individuals conform to be liked or accepted by others, while informational conformity happens when individuals look to others to guide their behaviour in uncertain situations.",source:"psychologytoday.com"},{text:"To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.",source:"Ralph Waldo Emerson (1803–1882), American essayist"},{text:"Most people are not even aware of their need to conform. They live under the illusion that they follow their own ideas and inclinations, that they are individualists — and that it just happens that their ideas are the same as those of the majority.",source:"Erich Fromm, The Art of Loving, 1956"},{text:"Conformity has been necessary for us to survive. The human race would not have developed without the willingness of individuals to sacrifice their differences to create cultures that supported their survival need.",source:"sensitiveevolution.com"},{text:"Never be limited by other people's limited imaginations. If you adopt their attitudes, then the possibility won't exist because you'll have already shut it out. You can hear other people's wisdom, but you've got to re-evaluate the world for yourself.",source:"Mae C. Jemison, doctor, engineer, and NASA astronaut"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What issue does Emerson's quote raise?",quoteRef:{text:"To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.",source:"Ralph Waldo Emerson (1803–1882), American essayist"}},{q:"Social media promote both 'being unique' and following trends. How does this paradox shape young people's identity?",quoteRef:null}]},
+    {num:"10",topic:"Generation Gap",quotes:[{text:"It's important to understand the motivations and reasoning behind each generation's characteristics. The reason that we divide humanity into these various generations is to drive understanding and insight, yet it often takes a negative turn that ends up with sweeping generalisations and division.",source:"Overcoming the generation gap"},{text:"History has always seen some degree of generational differences. The term 'generation gap' came into wide use in the United States and Europe during the 1960s. It described the cultural differences between the baby boomers and their parents.",source:"Mendez, N., Encyclopedia of Aging and Public Health, 2008"},{text:"Babies are unreasonable; they expect far too much of existence. Each new generation that comes takes one look at the world and thinks wildly, 'Is this all they've done to it?' and bursts into tears.",source:"Clarence Day, The Crow's Nest, 1921"},{text:"The young man pities his elders, fearing the day he, too, will join their ranks. The elderly man pities the younger generation, well-knowing the trials and tribulations that lie ahead of them.",source:"Lynda I Fisher, author"},{text:"Every generation imagines itself to be more intelligent than the one that went before it, and wiser than the one that comes after it.",source:"George Orwell, English novelist"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What issue does Orwell's quote raise?",quoteRef:{text:"Every generation imagines itself to be more intelligent than the one that went before it, and wiser than the one that comes after it.",source:"George Orwell, English novelist"}},{q:"To what extent do you agree that the problem of generation gap could be resolved?",quoteRef:null}]},
+    {num:"11",topic:"Stories",quotes:[{text:"Story is a sacred visualization, a way of echoing experience. There are lessons along the way.",source:"Terry Tempest Williams, Pieces of White Shell, 1987"},{text:"Every good story is of course both a picture and an idea, and the more they are interfused, the better.",source:"Henry James, American-British author"},{text:"We read books to find out who we are. A person who had never listened to nor read a tale or myth or parable or story, would remain ignorant of his own emotional and spiritual heights and depths, would not know quite fully what it is to be human.",source:"Ursula K. Le Guin, The Language of the Night, 1979"},{text:"The most powerful words in English are 'tell me a story,' words that are intimately related to the complexity of history, the origins of language, the continuity of the species, the taproot of our humanity, our singularity, and art itself.",source:"Pat Conroy, My Reading Life, 2010"},{text:"62% of Instagram users say they have become more interested in a brand or product after seeing it in Stories. Instagram Stories' share of total posting on the platform increased by 21% between 2019 and 2020.",source:"Gitnux Marketdata Report 2024"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"What can you infer from Le Guin's quote?",quoteRef:{text:"We read books to find out who we are. A person who had never listened to nor read a tale or myth or parable or story, would remain ignorant of his own emotional and spiritual heights and depths, would not know quite fully what it is to be human.",source:"Ursula K. Le Guin, The Language of the Night: Essays on Fantasy and Science Fiction, 1979"}},{q:"How can technological advances change the art of storytelling?",quoteRef:null}]},
+    {num:"12",topic:"Art and Science",quotes:[{text:"By staying within the borders of STEM, are we overlooking connections between the arts and innovative science? Are we missing an important opportunity to inspire and inform nonscientists?",source:"Gurnon D, Voss-Andreae J, Stanley J, PLoS Biol., 2013"},{text:"Students who receive an arts education are four times more likely to be recognized for academic achievement, and those engaged in arts classes increase their critical thinking ability by 72%.",source:"Gitnux Marketdata Report 2024"},{text:"I've never believed that they're separate. Leonardo da Vinci was a great artist and a great scientist. The finest dozen computer scientists I know are all musicians. I don't believe that the best people in any of these fields see themselves as one branch of a forked tree.",source:"Steve Jobs, Time, October 10, 1999"},{text:"The truths of Science become more meaningful and more beautiful when analyzed and explained; exactly the reverse occurs with the truths of Art.",source:"Boris Glikman, writer, poet and philosopher"},{text:"Every science begins as philosophy and ends as art.",source:"Will Durant, The Story of Philosophy, 1926"}],questions:[{q:"What criteria did you use to select the most relevant information for your talk? Why?",quoteRef:null},{q:"How do you interpret Glikman's quote?",quoteRef:{text:"The truths of Science become more meaningful and more beautiful when analyzed and explained; exactly the reverse occurs with the truths of Art.",source:"Boris Glikman, writer, poet and philosopher"}},{q:"Which is likely to be affected more by technological advances, arts or sciences? Why?",quoteRef:null}]}
+  ]
+};
+
+// ══════════════════════════════════════════════════════════
+// OL DATA
+// ══════════════════════════════════════════════════════════
+const OL={
+  2025:[
+    {num:"1",topic:"Music",context:"You are taking part in an English debate club discussion on music.",
+     s1:{type:'text',content:"Engaging in musical activities of any kind can have positive consequences in many areas. For instance, musical engagement and shaping musical abilities are important for the development of various traits and skills in children and adolescents. Making music with others helps young people in terms of identity development and also helps them cope with issues that occur when growing up.",attribution:"pmc.ncbi.nlm.nih.gov"},
+     s2:{type:'text',content:'An "alarmingly high" proportion of music students who start to learn a musical instrument subsequently give up. The first significant surge of dropout comes at the age of 11 and between ages 15 and 17. Many music students gave up before achieving even basic proficiency, feeling dissatisfied with their learning experience and disillusioned with musical activities. In many cases, students enthusiastically start their lessons but discontinue them before attaining the skill level necessary for musical independence and satisfaction.',attribution:"pmc.ncbi.nlm.nih.gov"},
+     questions:["How could students be motivated to continue learning a musical instrument?","How can music education impact students' academic performance?","In what ways do social media shape young people's taste in music?"]},
+    {num:"2",topic:"Life Satisfaction",context:"You are taking part in an English debate club discussion on life satisfaction.",
+     s1:{type:'text',content:"Life satisfaction often depends more on personality than on changing life circumstances. This explains why some people might not feel happy even when things are going well, while others stay positive despite facing challenges. For example, someone might get a promotion but still feel unfulfilled, while another person maintains optimism during difficult times. Simply improving external conditions, like getting a better job or moving to a nicer place, may not lead to lasting happiness unless these changes somehow affect our fundamental personality traits and outlook on life.",attribution:"psychologytoday.com"},
+     s2:{type:'text',content:"When looking for happiness and life satisfaction, people often pursue greater wealth. Traditional economic models of decision-making suggest that individual well-being is determined primarily by one's absolute income. Real-life observations, however, offer another perspective. What seems to characterize people's subjective well-being is not only how much they own in absolute terms but also how much they own in comparison with others.",attribution:"pmc.ncbi.nlm.nih.gov"},
+     questions:["How can social media affect a person's life satisfaction?","What factors do you think contribute the most to teenagers' life satisfaction?","How can young people change their mindset in order to experience greater life satisfaction?"]},
+    {num:"3",topic:"Effects of Social Media",context:"You are taking part in an English debate club discussion on the effects of social media.",
+     s1:{type:'chart_h',title:"Main reasons for social media having a mostly negative effect on teenagers",data:[{label:"Bullying / rumour spreading",value:27},{label:"Harms relationships",value:17},{label:"Unrealistic views of others' lives",value:15},{label:"Causes distraction / addiction",value:14},{label:"Peer pressure",value:12}],unit:"%",attribution:"www.statista.com (2018)"},
+     s2:{type:'text',content:"Though it might be difficult to imagine, social media actually has positive aspects for young users. Global social media platforms provide a space for young people to express their opinions, share their thoughts, and participate in meaningful conversations. Teenagers are not only absorbing information but also actively creating content, which enables them to communicate their ideas clearly and efficiently. The ability to express themselves freely not only boosts their self-esteem but also fosters a spirit of curiosity and uniqueness.",attribution:"www.thelatrust.org"},
+     questions:["Do you think social media should censor their content? Why / Why not?","How else can teenagers express themselves besides using social media?","How can teenagers be encouraged to limit the use of social media?"]},
+    {num:"4",topic:"Recycling",context:"You are taking part in an English debate club discussion on recycling.",
+     s1:{type:'text',content:"The plastics industry has worked for decades to convince people that recycling will keep waste out of landfills. Consumers sort their trash so plastic packaging can be repurposed, and local governments use taxpayer money to gather and process the material. Yet from the early days of recycling, plastic makers knew that it wasn't a practical solution to deal with increasing amounts of waste. The industry appears to have championed recycling mainly for its public relations value, rather than as a tool for avoiding environmental damage.",attribution:"npr.org"},
+     s2:{type:'bullet',intro:"Key statistics on plastic packaging waste in the EU:",items:["Each person in the EU generated <strong>36.1 kilos</strong> of plastic packaging waste on average in 2021.","The volume of plastic packaging waste per inhabitant <strong>increased by about 29%</strong> (+8.1 kilos per person) between 2010 and 2021.","The total plastic waste produced in the EU in 2021 was <strong>16.13 million tonnes</strong>. Some 6.56 million tonnes were recycled."],attribution:"www.europarl.europa.eu"},
+     questions:["How can individuals reduce the amount of plastic they use?","Do you think recycling should be made compulsory? Why / Why not?","Should companies face penalties if they don't use recyclable packaging? Why / Why not?"]},
+    {num:"5",topic:"Summer Jobs",context:"You are taking part in an English debate club discussion on summer jobs.",
+     s1:{type:'text',content:"A summer job teaches teenagers essential work values such as diligence, reliability, and commitment. Through these experiences, young people learn crucial skills including punctuality and professionalism — qualities that will help them succeed both academically and in their future careers. Working with experienced employees allows teens to observe and understand workplace expectations while taking on real responsibilities. This practical experience helps shape their attitude toward work and builds a strong foundation of professional habits that will serve them well in their future.",attribution:"careerprocanada.ca"},
+     s2:{type:'text',content:"The teenage workforce has indeed been shrinking for decades. In the 1970s, roughly 60% of American teenagers between the ages of 16 and 19 were either employed or looking for work during the summer months. By 2016, only 35% were. Since then, young people working in the summer months have seen something of a recovery, with the employment rate for teens reaching 38% in 2022. But even with that upward trend, the summer job is no longer the tradition it once was.",attribution:"vox.com"},
+     questions:["What other benefits of having a summer job are there?","What types of summer jobs are most suitable for students? Why?","How can students balance a summer job with free time during their break from school?"]},
+    {num:"6",topic:"After-school Programmes",context:"You are taking part in an English debate club discussion on after-school programmes.",
+     s1:{type:'text',content:"After-school programmes serve children and youth of all ages. These programmes cover a wide range of focus areas, including academic support, mentoring, positive youth development, arts, sports and recreation. The activities children and youth engage in outside of school hours are critical to their overall development, which is why quality after-school programmes are needed in all communities.",attribution:"www.fan.org"},
+     s2:{type:'text',content:'Lucas (a 16-year-old) admits: "I feel like my entire life revolves around school and after-school activities, and it is starting to get overwhelming. Every day I\'m either at practice, rehearsals, or a study group. By the time I get home, I\'m exhausted, and there\'s hardly any time to do homework or just relax. I feel like I\'m juggling a million things all the time and it\'s hard to keep up. Sometimes I just wish I could do nothing at all for a change."',attribution:"www.quora.com"},
+     questions:['How can teenagers learn to say "no" to activities they don\'t genuinely enjoy?',"Do you think young people feel pressured to be busy all the time? Why / Why not?","What can students do to balance their studies and free time?"]},
+    {num:"7",topic:"Free Higher Education",context:"You are taking part in an English debate club discussion on free higher education.",
+     s1:{type:'text',content:'Hannah Lang, a fourth-year bioengineering student at Aarhus University in Denmark, receives a monthly grant of around $800 from the Danish government. "It means I don\'t have to work too much outside of my studies," Hannah says. "It helps pay the rent and food, and then, you don\'t have to think too much about money." And like most Danes, she will graduate owing nothing. That\'s because in Denmark, as in at least a dozen European countries, tuition is free at public universities and most colleges, and students are paid to go into higher education as if it were a job.',attribution:"www.theworld.org"},
+     s2:{type:'text',content:"People don't tend to put as much care and effort into something they get for free as they would if they had to pay for it. When it comes to college studies, those with a financial stake in them will predictably put in much more effort than those who are paying nothing out of their own pockets. Over the decades, we have seen a sharp decline in the number of hours college students devote to their coursework, and it's easy to imagine a further decline in student effort if they are attending college for free.",attribution:"www.aier.org"},
+     questions:["Would students study harder if they received financial support from the government for good grades? Why / Why not?","What else can motivate students to work hard?","Should university education be free for everyone but with stricter selection criteria? Why / Why not?"]},
+    {num:"8",topic:"Culture and the World",context:"You are taking part in an English debate club discussion on culture and the world.",
+     s1:{type:'text',content:"Globalization helps people learn about and appreciate diverse cultures worldwide. Through interaction with different societies, people develop a better understanding of international traditions and lifestyles. When people from different cultural backgrounds collaborate and exchange ideas, it leads to mutual benefits. Such interactions promote new perspectives and highlight our shared human experiences, ultimately creating a more connected and harmonious global community.",attribution:"www.linkedin.com"},
+     s2:{type:'text',content:"Globalization has changed how cultural identity develops across the world. Many local traditions are becoming less common as Western popular culture spreads globally through media and technology. The Internet and social media make it easier for people worldwide to share cultural content, which creates a more uniform global culture. While this connection brings new opportunities, it also means some local traditions and customs become less important in daily life. This process affects how communities maintain their unique characteristics.",attribution:"jihaneziyan.medium.com"},
+     questions:["How do social media influence the balance between local and global culture?","How can communities preserve their cultural identity in the digital age?","Why does experiencing different cultures change our worldview?"]},
+    {num:"9",topic:"International Student Exchange",context:"You are taking part in an English debate club discussion on international student exchange.",
+     s1:{type:'text',content:"International student exchange programs can present challenges for students, such as language barriers, unfamiliar learning environments, and cultural differences. Language proficiency is often a significant hurdle for students as it can impact their academic performance and social integration in the host country. Moreover, adjusting to a new educational system, different teaching methods, and cultural norms requires adaptability and resilience on the part of students.",attribution:"researchgate.net"},
+     s2:{type:'chart_h',title:"Importance of personal and social benefits gained from ERASMUS (avg. rating, scale 1–5)",data:[{label:"Learning to live independently",value:"4.60"},{label:"Making new friends",value:"4.40"},{label:"Rich and interesting social life",value:"4.10"},{label:"Making international contacts",value:"4.00"},{label:"Keeping contacts after ERASMUS",value:"3.80"},{label:"Learning teamwork",value:"3.00"}],unit:"",scale:5,attribution:"www.mdpi.com"},
+     questions:["How should students prepare for an exchange year abroad?","How may studying abroad change students' views on their own culture?","Why do universities encourage international student exchange?"]},
+    {num:"10",topic:"Leisure Activities",context:"You are taking part in an English debate club discussion on leisure activities.",
+     s1:{type:'text',content:"One study found that people who do at least 20 minutes of physical leisure activities once a week are less likely to feel tired. Other research found that doing enjoyable physical activities during your free time was associated with lower blood pressure and better physical function. These activities were also linked to higher levels of positive mental states and lower levels of depression and negative effects.",attribution:"www.verywellmind.com"},
+     s2:{type:'chart_h',title:"Percentage of participants according to leisure activities practiced (young people aged 18–24)",data:[{label:"Mass media use",value:55},{label:"Hobbies and computing",value:28},{label:"Social life and entertainment",value:26},{label:"Sports and outdoor activities",value:9}],unit:"%",attribution:"researchgate.net"},
+     questions:["To what extent does Source 2 reflect how you spend free time?","How could teenagers be encouraged to take up physical leisure activities?","Why do people tend to spend less time on sports and outdoor activities than before?"]},
+    {num:"11",topic:"Change",context:"You are taking part in an English debate club discussion on change.",
+     s1:{type:'text',content:'Change is not always beneficial. It may force us out of tired habits and impose better ones upon us, but it can also be stressful and costly. Change for the sake of change is a risk — the pursuit of "better" can sometimes leave people bitter, regretting changes they did not need to make.',attribution:"www.ineos.com"},
+     s2:{type:'text',content:"One reason people may resist change is that it can be uncomfortable and uncertain. It is natural to feel comfortable in familiar surroundings and routines. However, it is important to recognize that growth and progress often come from stepping outside of your comfort zone. By trying new activities and embracing change, you can broaden your horizons, develop new skills and discover creative solutions to problems.",attribution:"www.forbes.com"},
+     questions:["How could people overcome their fear of change?","Should a person change themselves while trying to fit in? Why / Why not?","Do you agree with the opinion that we should never stop learning? Why / Why not?"]},
+    {num:"12",topic:"Fake News",context:"You are taking part in an English debate club discussion on fake news.",
+     s1:{type:'text',content:"Why do people fall for fake news? A study by Pennycook, Cannon, and Rand (2018) shows that individuals are more likely to deem a false statement true the more times they are exposed to it. This may be because we recognize the information as familiar, but don't necessarily remember where or in what context we encountered it before. Another study (2018) found that false news inspires strong emotions such as fear, disgust, and surprise. It grabs our attention and gives us the impression that we are updating our knowledge of the world, thus serving to encourage its spread.",attribution:"libguides.uvic.ca"},
+     s2:{type:'chart_h',title:"Level of confidence in distinguishing between real and fake news (US adults)",data:[{label:"Very confident",value:39},{label:"Somewhat confident",value:54},{label:"Not at all confident",value:7}],unit:"%",attribution:"www.enterpriseappstoday.com"},
+     questions:["What helps you distinguish between real and fake news?","What can help people become better at recognizing fake news?","How can the spread of fake news influence people's trust in mass media?"]},
+    {num:"13",topic:"Technology in Class",context:"You are taking part in an English debate club discussion on the use of technology in class.",
+     s1:{type:'text',content:'Previous research has shown that college students who regularly use text messages tend to send them during class lectures. "Now we see that in-class texting partially interferes with a student\'s ability to pay attention, which prior studies show is necessary for effective cognitive learning," said Professor Wei from the University of Pittsburgh.',attribution:"www.sciencedaily.com"},
+     s2:{type:'bullet',intro:"What do students do with their mobile devices in class?",items:["Use <strong>online collaboration tools</strong>","Use devices (especially laptops and tablets) for <strong>note taking, searching for relevant material or checking facts</strong>","Access <strong>e-textbooks, library services or materials</strong> shared online","Use <strong>e-portfolios</strong> to record their work"],attribution:"teachonline.ca"},
+     questions:["What advice would you give to someone who is texting during lessons?","What skills do students need to use technology effectively for learning?","How does technology change the way students learn?"]},
+    {num:"14",topic:"Setting Goals",context:"You are taking part in an English debate club discussion on setting goals.",
+     s1:{type:'text',content:"Goal setting is crucial for teens looking ahead. It lays a solid foundation for future choices and paths they will take. When teenagers set goals, they learn to look forward and think about what they wish to achieve long-term, matching their passions and striving for something meaningful. Teens who set goals are better at making plans as they can see the steps needed to reach their goal and follow their interests.",attribution:"teencoachacademy.com"},
+     s2:{type:'text',content:'Goal setting for teens can be difficult: teens have big ideas and big dreams but do not yet have the experience of breaking down and organizing a goal into steps. Goals like "Get an A-plus in all of my classes" or "Save enough money for a car" can end in disappointment or dropping the goal. If done without planning and intention, a goal could inadvertently hurt a growth mindset. Teens might fail with a vague or ambitious goal and then think, "See? I can\'t do it anyway."',attribution:"biglifejournal.com"},
+     questions:["What can schools do to help teenagers learn how to set goals?","How can other people's achievements influence how we set our personal goals?","What makes a goal worth working towards?"]},
+    {num:"15",topic:"Skills and Careers",context:"You are taking part in an English debate club discussion on skills and careers.",
+     s1:{type:'text',content:"During the Covid pandemic, months were spent in lockdown, cutting back on day-to-day interactions. For many, life has returned to normal, but the effects of this disruption are longer lasting. One group feeling the impact are those who have recently entered the workforce. A lack of confidence, poor presentation skills, and the inability to work in teams are among the criticisms employers have of their latest graduate hires. These businesses claim that the disruption students faced during the pandemic has left many without these soft skills.",attribution:"www.raconteur.net"},
+     s2:{type:'data_table',title:"Percent of employers who say these skills are very important to gaining leadership positions",sections:[{heading:"Human skills",rows:[{label:"Communication Skills",value:"77%"},{label:"Listening Skills",value:"75%"},{label:"Critical-Thinking Skills",value:"74%"},{label:"Interpersonal Skills",value:"73%"}]},{heading:"Easily automated skills",rows:[{label:"Memory Skills",value:"54%"},{label:"Computer / Tech Skills",value:"50%"},{label:"Quantitative Skills",value:"50%"},{label:"Ability to Repeat Tasks",value:"54%"}]}],attribution:"Cengage / Morning Consult, 2018 · www.shrm.org"},
+     questions:["In your opinion, why do employers value human skills over easily automated skills?","How can communication skills help someone in their career?","What can schools do to improve young people's soft skills?"]},
+    {num:"16",topic:"Handmade Goods",context:"You are taking part in an English debate club discussion on handmade goods.",
+     s1:{type:'text',content:"The significance of handmade goods has shifted with the rise of industrialization and mass production in the late 18th and early 19th centuries. Mass production techniques revolutionized the manufacturing industry. This shift allowed companies to produce goods in large quantities, making them readily available to consumers. While this approach has made the goods cheaper and more accessible, it often sacrificed the personal touch and artistry associated with handcrafted products. As a result, the appreciation for craftsmanship has decreased in favour of convenience and affordability.",attribution:"ruralhandmade.com"},
+     s2:{type:'bullet',intro:"In recent years, there's been a notable rise in appreciation for handmade goods:",items:["<strong>Authenticity:</strong> Consumers are seeking authenticity — items that express creativity and personal expression.","<strong>Quality:</strong> There's a growing appreciation for the higher quality of artisan products, reflecting skilful craftsmanship and attention to detail.","<strong>Community and Connection:</strong> Buying handmade supports small businesses and local communities, creating a sense of involvement.","<strong>Customization:</strong> Artisans often offer customization, catering to individual tastes and preferences."],attribution:"chillflamecandles.com"},
+     questions:["Do you think the higher prices of handmade items are justified? Why / Why not?","Do younger generations value handmade goods?","In what ways do handmade products reflect the cultural heritage of a country?"]},
+    {num:"17",topic:"AI Generated Content",context:"You are taking part in an English debate club discussion on AI generated content.",
+     s1:{type:'bullet',intro:"Identifying AI-generated content has become a burning discussion point. The potential AI-related dangers include:",items:["<strong>Bias and discrimination:</strong> Chatbots may increase existing prejudices and discrimination if trained on biased data.","<strong>Misinformation:</strong> AI language models can produce inaccurate or misleading information if not adequately trained or supervised."],attribution:"intetics.com"},
+     s2:{type:'chart_h',title:"How many people can correctly identify AI generated content? (% correct, by age group)",data:[{label:"18–24",value:40.2},{label:"25–34",value:44.9},{label:"35–44",value:49.8},{label:"45–54",value:49.6},{label:"55–64",value:49.1},{label:"65+",value:52.0}],unit:"%",attribution:"www.tooltester.com"},
+     questions:["Do you think it is important to be able to identify AI generated content? Why / Why not?","What problems can AI-generated content create in social media?","What skills do you think people need to develop to better identify AI-generated content in their daily lives?"]},
+    {num:"18",topic:"Reading",context:"You are taking part in an English debate club discussion on reading.",
+     s1:{type:'text',content:"Social media has a strong influence on reading habits, especially among young people. Platforms like Instagram and TikTok focus on short, engaging content, which can reduce the time spent on traditional reading. By 2016, only 16% of 12th-graders read a book or magazine almost every day. This decline in reading raises concerns about literacy and critical thinking skills.",attribution:"apa.org"},
+     s2:{type:'text',content:"Books are making a strong comeback, and one of the primary reasons is social media. Book influencers are paving the way for an entirely new generation of reading enthusiasts. Short-form social media apps like Instagram and TikTok have become platforms for book clubs and book recommendations by celebrities. Typically, book influencers read the book, offer a personalized review, and encourage others to read it. It's not uncommon for publishers and authors to make them part of advertising campaigns — especially book launches and other PR events.",attribution:"www.privateinternetaccess.com"},
+     questions:["How else could teenagers be encouraged to read more?","Why do you think some books become very popular on social media platforms?","Why might people distrust recommendations from social media influencers?"]}
+  ],
+  2024:[
+    {num:"D1·1",topic:"Mathematics",context:"You are taking part in an English debate club discussion on mathematics.",
+     s1:{type:'text',content:'Mathematics is the very definition for some people of "difficult". In fact, it has become acceptable for certain students to perform badly in this subject. However, there is an opinion that everything starts with one\'s attitude. If a student thinks from the beginning that they will not be able to perform well in the subject, they will end up developing a phobia towards mathematics. This in turn will affect their learning ability and performance. A positive attitude can make a lot of difference.',attribution:"www.edsys.in"},
+     s2:{type:'text',content:"Students studying science or math in college have a higher employment rate and salary than other majors after graduation, according to a report from the Department of Education published in 2014. The report looked at four years of data on college graduates and found that STEM majors — science, technology, engineering, and math — on average earn $65,000, while non-STEM majors earned about $15,500 less. STEM majors were also more likely to be employed and hold only one full-time job, rather than a part-time job or multiple jobs.",attribution:"www.businessinsider.com"},
+     questions:["To what extent do you agree with the opinion that some subjects at school are more important than others?","What would you say to someone who thinks that they will not need math in the future?","How can skills developed through learning mathematics be useful in real-life situations?"]},
+    {num:"D1·2",topic:"Digital Literacy",context:"You are taking part in an English debate club discussion on digital literacy.",
+     s1:{type:'text',content:"Digital literacy is the skill to navigate our digital world using reading, writing, technical skills, and critical thinking. It's using technology — like a smartphone, PC, e-reader, and more — to find, evaluate, and communicate information. It means having the skills you need to live, learn, and work in a society where communication and access to information is increasingly through digital technologies like internet platforms, social media, and mobile devices.",attribution:"www.westernsydney.edu.au"},
+     s2:{type:'text',content:"In 2021, 95% of young people aged 16–29 years in the EU reported using the internet daily. Although the internet can provide a place for young people to share their experiences and exchange their views, there are also risks. It is equally important to address safety concerns and to teach young people to analyse, compare and critically evaluate the credibility and reliability of sources of data, information and digital content. Despite the high number of young people using the internet, only 36%, at an EU level, engage in activities related to fact-checking online information and its sources.",attribution:"ec.europa.eu"},
+     questions:["How can digital literacy skills help someone in their career?","What can schools do to improve young people's digital literacy skills?","Why is it important to fact-check information before sharing it online?"]},
+    {num:"D1·3",topic:"Gardening",context:"You are taking part in an English debate club discussion on gardening.",
+     s1:{type:'text',content:"According to a King's Fund report, the benefits of gardening were found to be broad and diverse, showing significant reductions in depression and anxiety and improved social functioning. Gardening can also help people maintain their independence and prevent cognitive decline. But lesser known is the role that gardening can play in helping to keep you fit and healthy. The number of calories burnt from 30 minutes of gardening is comparable to playing badminton, volleyball or practising yoga.",attribution:"www.rhs.org.uk"},
+     s2:{type:'chart_h',title:"The best things about gardening — % who find this enjoyable (1,019 Americans, 2017)",data:[{label:"Being outside in the fresh air",value:74},{label:"Watching something grow and thrive",value:58},{label:"Being active",value:54},{label:"Engaging with nature",value:53}],unit:"%",attribution:"Statista survey"},
+     questions:["Should gardening skills be included in the school curriculum? Why / Why not?","What arguments would you use to persuade someone to take up gardening?","Besides personal benefits, what social benefits can gardening have?"]},
+    {num:"D1·4",topic:"Languages",context:"You are taking part in an English debate club discussion on languages.",
+     s1:{type:'text',content:"There are a myriad of predictions, encouraging and terrifying, about what technological innovations the future holds. One hypothesis is that, sooner rather than later, the language barrier will effectively be broken thanks to modern language technology. From Google Translate all the way to simultaneous translation earbuds, some have predicted new technology will make it unnecessary and, frankly, impractical to learn a language. Why study French when you can get along just fine in Paris with a wearable device? How important is understanding Spanish verb conjugation if your phone does it for you?",attribution:"unitedlanguagegroup.com"},
+     s2:{type:'text',content:"Researchers across different studies have found that studying a language seems to unlock students' creative abilities. This could be the result of the thought processes involved in language learning. These include translation, language switching and disciplined study, along with a willingness to learn and adapt. Language learning skills will help learners in all areas of their lives, improving their mental abilities, and helping them with problem-solving and decision-making. Ultimately, this all goes towards enriching their personal, social and professional relationships.",attribution:"www.cambridge.org"},
+     questions:["What other benefits does language learning have?","What advice would you give to someone learning a language?","Why do some people give up when learning a language?"]},
+    {num:"D1·5",topic:"Environmentally-friendly Tourism",context:"You are taking part in an English debate club discussion on environmentally-friendly tourism.",
+     s1:{type:'text',content:"Tourism is responsible for roughly 8% of the world's carbon emissions. From plane flights and boat rides to souvenirs and lodging, various activities contribute to tourism's carbon footprint. With the impacts of climate change becoming increasingly evident, it is critical that local governments, tourism businesses and suppliers, along with individual travelers all take action to reduce the industry's reliance on fossil fuels. New technologies such as solar-powered water heaters, temperature control systems, and energy saving appliances allow the industry to lessen its carbon footprint.",attribution:"sustainabletravel.org"},
+     s2:{type:'text',content:"According to Booking.com's 2022 Sustainable Travel Report, there is a growing desire amongst travelers to become more green and sustainable as 73 percent of global travelers claim that sustainable travel is important to them. However, the data suggests that there is a large \"say-do discrepancy\" in consumer behavior. Just saying that someone cares about sustainability is not enough anymore. Most travelers do not have a clear idea of what it means to travel sustainably. Cost and convenience still clearly outweigh sustainable travel decisions.",attribution:"www.cayugacollection.com"},
+     questions:["How can travellers be educated about sustainable travel practices?","How can travellers support local communities while travelling sustainably?","Why do some areas try to limit the number of tourists visiting them?"]},
+    {num:"D1·6",topic:"Achieving Success",context:"You are taking part in an English debate club discussion on achieving success.",
+     s1:{type:'text',content:"Teenagers are at a stage in their lives where they are navigating various challenges, and achieving personal growth can sometimes feel like an uphill battle. However, during this period, one timeless practice has proven to be effective — mentoring. Mentoring matters because it provides insights and knowledge that can help guide a teen's journey to success. Teens with mentors were found to set higher educational goals and were more inclined to pursue higher education. Additionally, those with mentors were more likely to spend their time productively participating in activities that benefitted them in the long run.",attribution:"gtscholars.org"},
+     s2:{type:'chart_h',title:"The Skills to Succeed — % of adults saying which skills are most important for children today",data:[{label:"Communication",value:90},{label:"Reading",value:86},{label:"Math",value:79},{label:"Teamwork",value:77},{label:"Writing",value:75},{label:"Logic",value:74},{label:"Science",value:58},{label:"Athletic",value:25},{label:"Music",value:24},{label:"Art",value:23}],unit:"%",attribution:"Pew Research Center (adapted from pewresearch.org)"},
+     questions:["What activities can young people engage in to develop some of the skills mentioned in Source 2?","What qualities should teenagers look for in a mentor?","How important is it to have a positive role model?"]},
+    {num:"D2·1",topic:"Media Balance",context:"You are taking part in an English debate club discussion on media balance.",
+     s1:{type:'text',content:"Media balance means using media in a way that feels healthy and in balance with other life activities like spending time with family and friends, school, hobbies, and many other things. The signs that might show that your media choices are out of balance include tiredness because you didn't get enough sleep; frustration and anger because you are struggling with a certain video game, loss of focus and energy and feelings of isolation and sadness.",attribution:"www.houstonisd.org"},
+     s2:{type:'chart_h',title:"% of U.S. teens (ages 13–17) who say how difficult it would be to give up social media",data:[{label:"Very hard",value:18},{label:"Somewhat hard",value:35},{label:"Somewhat easy",value:26},{label:"Very easy",value:20}],unit:"%",attribution:"Pew Research Center, 2022"},
+     questions:["What could be the reasons for teens finding it hard to give up social media?","How might excessive use of social media affect studies at school?","How might the use of social media be beneficial?"]},
+    {num:"D2·2",topic:"Green Spaces",context:"You are taking part in an English debate club discussion on the importance of green spaces.",
+     s1:{type:'text',content:"Green spaces in towns and cities could lead to significant and sustained improvements in mental health, finds a study published in the journal of Environmental Science & Technology. Analysing data that followed people over a five-year period, the research has found that moving to a greener area not only improves people's mental health, but that the effect continues long after they have moved. Increasing green spaces in cities — such as parks and gardens — could deliver substantial benefits to public health.",attribution:"news-archive.exeter.ac.uk"},
+     s2:{type:'text',content:"Accessible and high-quality urban green and blue spaces, such as parks, urban forests, tree-lined streets, river banks and coastlines, provide significant health benefits to local communities. Green spaces improve air quality, reduce noise and enhance biodiversity. Green spaces also moderate temperatures during hot periods and provide cool and shaded areas. Local communities use green space for physical exercise and social interactions, and for relaxation and mental restoration.",attribution:"citymonitor.ai"},
+     questions:["Would you support an initiative to create more green spaces in your local area? Why / Why not?","How can cities strike a balance between the development of cities and the preservation of green spaces?","What challenges might cities face when maintaining green spaces?"]},
+    {num:"D2·3",topic:"Online Learning",context:"You are taking part in an English debate club discussion on online learning.",
+     s1:{type:'chart_h',title:"How do teens find online learning compared to in-person schooling? (N=890, teens 13–17)",data:[{label:"Much worse",value:19},{label:"Worse",value:40},{label:"The same",value:21},{label:"Better",value:10},{label:"Much better",value:9}],unit:"%",attribution:"Common Sense Media / SurveyMonkey poll, 2020 · www.pcmag.com"},
+     s2:{type:'text',content:"Online courses have expanded rapidly and have the potential to extend further the educational opportunities of many students, particularly those least well-served by traditional educational institutions. However, in their current design, online courses are difficult, especially for the students who are least prepared. These students' learning and persistence outcomes are worse when they take online courses than they would have been had these same students taken in-person courses.",attribution:"www.brookings.edu"},
+     questions:["Which subjects could be difficult to study online?","How could students self-motivate when studying?","What practical study habits do students need when learning online?"]},
+    {num:"D2·4",topic:"Soft Skills",context:"You are taking part in an English debate club discussion on soft skills.",
+     s1:{type:'text',content:"Strengthening a soft skill (e.g. communication, time management, problem-solving) is the best investment a person can make in their career as they never go out of style. Plus, the rise of AI is only making soft skills increasingly important as they are the type of skills which cannot be automated. That's why 57% of leaders today say soft skills are more important than hard skills. So, equipping students with effective tools and strategies that help them to think critically and reason logically is essential for meeting the challenges of the 21st century.",attribution:"www.linkedin.com"},
+     s2:{type:'chart_grouped',title:"New college grads lack soft skills — employers' views (650+ employers surveyed)",groups:[{label:"Finding applicants with interpersonal skills",values:[{name:"Very/somewhat difficult",value:55},{name:"Very/somewhat easy",value:42}]},{label:"Finding applicants with communication skills",values:[{name:"Very/somewhat difficult",value:54},{name:"Very/somewhat easy",value:43}]},{label:"Finding applicants with critical thinking skills",values:[{name:"Very/somewhat difficult",value:64},{name:"Very/somewhat easy",value:33}]}],attribution:"Cengage / Morning Consult, 2018 · adapted from shrm.org"},
+     questions:["What school activities could help students develop some of the skills mentioned in Source 2?","How important are effective communication skills for career success?","To what extent can digitalisation be blamed for some students lacking soft skills?"]},
+    {num:"D2·5",topic:"STEM Subjects",context:"You are taking part in an English debate club discussion on Science, Technology, Engineering and Maths subjects.",
+     s1:{type:'text',content:"More young people are taking science, technology, engineering, and maths (STEM) subjects at university than ever before. This is good news, especially as STEM subjects have a positive impact on the economy and society. Improving the quality of science teaching and increasing the number of young people that study science subjects is important if we are to address the STEM skills shortage and support the UK economy to grow.",attribution:"educationhub.blog.gov.uk"},
+     s2:{type:'text',content:"Science, technology, engineering, and mathematics (STEM) are major factors in the maintenance and development of healthcare, the environment, infrastructure, education, the economy, space exploration, etc. As a result, advancements in STEM not only shape our world and drive progress but also offer lucrative opportunities for individuals with skills in these areas. Almost 10 million workers in STEM occupations were employed in 2021. The U.S. Bureau of Labor Statistics predicts this total will grow nearly 11% by 2031, which is four times faster than all other occupations.",attribution:"fullstackacademy.com"},
+     questions:["How might schools and companies motivate students to study STEM subjects?","What potential challenges might students face in studying a STEM subject?","What other subjects and skills are necessary for a successful career?"]},
+    {num:"D2·6",topic:"Reading",context:"You are taking part in an English debate club discussion on reading.",
+     s1:{type:'bullet',intro:'The Australian Scholastic "Kids and family reading report" (2016) found the following:',items:["92% of 15 to 17-year-olds and 90% of 12 to 14-year-olds most enjoyed books they'd chosen for themselves.","Around 70% of teens would read more if they could find more books they liked.","12 to 17-year-olds want to read books that: will make them laugh (54%), let them use their imagination (47%), have a mystery or problem to solve (42%), or have characters they wish they could be like (38%)."],attribution:"natlib.govt.nz"},
+     s2:{type:'text',content:"The time that teenagers spend on YouTube, TikTok, and other video-sharing sites has rocketed during the pandemic, while reading time among those age groups remains flat. Media use — everything from reading books to watching videos to scrolling social media — by kids 8 to 18 was already increasing before the pandemic. But the pace of acceleration has quickened significantly due to technology-related media use. The biggest increase was in online videos, which grew by 23 minutes per day for teens. Only about a third of tweens and teens reported reading for pleasure every day.",attribution:"edweek.org"},
+     questions:["Would you consider the trend described in Source 2 to be troubling? Why / Why not?","How can teenagers achieve a balance between using social media and reading for pleasure?","How can social media be used to raise teenagers' interest in reading?"]},
+    {num:"D3·1",topic:"Money Management",context:"You are taking part in an English debate club discussion on money management.",
+     s1:{type:'text',content:"A majority of teens — 87% — admit they don't know much about personal finance, according to a new study by ING Direct. The study shows that 35% of teens want to learn how to save; 28% know that managing a budget is important and want to learn the required skills. \"Unfortunately, parents think schools are doing the training and schools think parents are doing the training.\" Teens grow up in an environment where they use cards for their purchases, and if they need cash, they go to a machine and money comes out.",attribution:"www.foxbusiness.com"},
+     s2:{type:'text',content:"Creating healthy financial habits, such as regular budgeting and building credit, is just as important for teenagers as adults. However, it's common for teens, who are learning how to handle their finances, to encounter money mishaps and mismanagement. It's important for parents and caregivers to discuss financial matters with their teen and teach them to build strong financial practices. Teens can increase their financial literacy through money management principles, spending and saving practices, understanding credit and insurance and more.",attribution:"money.com"},
+     questions:["How might schools and parents collaborate to provide teenagers with effective finance education?","What considerations should teens keep in mind when using cards versus cash for their purchases?","Why are teenagers often advised to work in summer?"]},
+    {num:"D3·2",topic:"Happiness",context:"You are taking part in an English debate club discussion on happiness.",
+     s1:{type:'text',content:"Genes make up 40% of our ability to be happy, says psychotherapist Susan Zinn. But that doesn't mean that if you weren't born with certain genes, you're destined to be unhappy. Zinn says that \"it's possible to rewire our brains for happiness,\" because the other 60% of happiness comes from lifestyle and other environmental factors. \"You have a choice,\" Zinn says. \"It's no different than deciding what to wear or eat. When it comes to happiness, there's a lot we can do.\"",attribution:"journify.co"},
+     s2:{type:'text',content:"Happiness, in psychology, is a state of emotional well-being that a person experiences either in a narrow sense when good things happen in a specific moment, or more broadly, as a positive evaluation of one's life and accomplishments overall — that is, subjective well-being. Happiness can be distinguished both from negative emotions (such as sadness, fear, and anger) and also from other positive emotions (such as affection, excitement, and interest).",attribution:"britannica.com"},
+     questions:["Do you think social media has affected people's ability to be happy?","What lifestyle changes can positively impact happiness?","What role do ambitions play in achieving happiness?"]},
+    {num:"D3·3",topic:"Team Sports",context:"You are taking part in an English debate club discussion on team sports.",
+     s1:{type:'text',content:"Youth involvement in team sports has been on the decline since at least the late 2000s. This gradual slide was accelerated by the pandemic, which severely curtailed or even halted youth athletics. A truly unacceptable outcome, given what we know about the benefits of regular exercise. However, the way children relate to sports seems to have fundamentally shifted. Football, soccer, and basketball are no longer things you do — they're things you watch, probably in short five- or 10-second bursts on a smartphone.",attribution:"washexam.com"},
+     s2:{type:'text',content:"The physical benefits of team sports are well-documented. Exercise is essential for maintaining a healthy weight and reducing the risk of chronic diseases. Another good thing about team sports is that they teach teamwork. In today's world, working well with others is more important than ever. Another essential life skill that can be learned from team sports is time management. Team sports can be a great way to learn how to manage stress and pressure.",attribution:"athleticsweekly.com"},
+     questions:["How can young people be encouraged to do more sports?","To what extent can a person's choice of sport reflect their personality?","What skills developed through a team sport can be useful beyond sports? How?"]},
+    {num:"D3·4",topic:"Artificial Intelligence (AI)",context:"You are taking part in an English debate club discussion on artificial intelligence.",
+     s1:{type:'text',content:"A recent experiment highlighted how well AI is able to deceive. Sophie Nightingale, a psychologist at Lancaster University, co-authored a study that tested whether online volunteers could distinguish between passport-like headshots created by an AI system and real images. \"On average, people were pretty much at chance performance. Basically, we're at the point where it's so realistic that people can't reliably perceive the difference between those synthetic faces and actual, real faces — faces of actual people who really exist.\"",attribution:"www.scientificamerican.com"},
+     s2:{type:'text',content:"AI-generated disinformation may be more convincing than human-written disinformation, as a study led by Giovanni Spitale at the University of Zurich reveals. Participants were 3% less likely to identify false tweets generated by AI compared to human-written ones, indicating a worrisome credibility gap. The researchers tested susceptibility to disinformation on topics like climate change and COVID. AI-written false tweets were less likely to be recognized, highlighting the growing concern over the impact of AI-generated disinformation.",attribution:"www.technologyreview.com"},
+     questions:["How might society need to adapt to address the growing popularity of AI?","When could the use of AI be beneficial?","Should there be specific regulations to control the use of AI in content creation?"]},
+    {num:"D3·5",topic:"Music",context:"You are taking part in an English debate club discussion on music.",
+     s1:{type:'text',content:"For decades, researchers have found that musical training and making music seems to be something of a brain booster. It's associated with better language ability, better academic performance, and improved memory, especially in children who practise regularly. And playing an instrument or singing a song is good for adults too. \"Active music making in a social context has the potential to enhance quality of life, well-being and health in older people,\" researchers concluded in one study.",attribution:"www.businessinsider.com"},
+     s2:{type:'text',content:"The Australian Bureau of Statistics shows children are most likely to start studying music between the ages of nine and 11. Researchers in a 2009 UK study suggested the dramatic drop in music tuition after age 11 was linked to children starting high school. The study also revealed that the main reasons for children ending music lessons were being bored, frustration at a lack of progress, disliking practice and being busy with other activities. However, some children later regretted stopping music lessons.",attribution:"theconversation.com"},
+     questions:["How can engagement with music be beneficial for a career?","What could motivate children to continue with their music education?","In what way does social media influence the creation and promotion of music?"]}
+  ]
+};
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let currentLevel=null; // 'al' | 'ol'
+let currentMode=null;  // 'full' | 'qa'
+let currentPaper=null;
+let prepInterval=null,talkInterval=null,qaonlyInterval=null;
+let prepLeft=1200,talkLeft=300,qaonlyLeft=90;
+let currentQIndex=0;
+
+// ══════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function clearAll(){clearInterval(prepInterval);clearInterval(talkInterval);clearInterval(qaonlyInterval);prepInterval=talkInterval=qaonlyInterval=null;}
+
+function goLevel(){clearAll();showScreen('level');}
+function goMode(){clearAll();showScreen('mode');}
+function goSelect(){clearAll();buildSelectGrids();showScreen('select');}
+
+function setLevel(l){
+  currentLevel=l;
+  // Update mode pills
+  const fullPills=document.getElementById('mode-full-pills');
+  fullPills.innerHTML=l==='al'
+    ?'<span class="bc-pill">20 min prep</span><span class="bc-pill">5 min talk</span><span class="bc-pill">Q &amp; A</span>'
+    :'<span class="bc-pill">5 min prep</span><span class="bc-pill">3–5 min talk</span><span class="bc-pill">Q &amp; A</span>';
+  document.getElementById('mode-level-badge').innerHTML=`<span class="level-badge ${l}">${l.toUpperCase()}</span>`;
+  showScreen('mode');
+}
+
+function setMode(m){
+  currentMode=m;
+  buildSelectGrids();
+  document.getElementById('select-badge').innerHTML=`<span class="level-badge ${currentLevel}">${currentLevel.toUpperCase()}</span> <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">${m==='full'?'Full Simulation':'Q&amp;A Only'}</span>`;
+  showScreen('select');
+}
+
+function buildSelectGrids(){
+  const container=document.getElementById('select-year-sections');
+  container.innerHTML='';
+  const data=currentLevel==='al'?AL:OL;
+  const years=Object.keys(data).sort((a,b)=>b-a);
+  years.forEach(year=>{
+    const title=document.createElement('div');
+    title.className='section-title';
+    title.textContent=`${year} Exam`;
+    container.appendChild(title);
+    const grid=document.createElement('div');
+    grid.className='select-grid';
+    data[year].forEach((paper,i)=>{
+      const card=document.createElement('div');
+      card.className='paper-card';
+      card.innerHTML=`<div class="pc-num">${year} · Paper ${paper.num}</div><div class="pc-topic">${paper.topic}</div>`;
+      card.onclick=()=>startPaper(year,i);
+      grid.appendChild(card);
+    });
+    container.appendChild(grid);
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// START PAPER
+// ══════════════════════════════════════════════════════════
+function startPaper(year,idx){
+  clearAll();
+  const data=currentLevel==='al'?AL:OL;
+  currentPaper=data[year][idx];
+  currentPaper._year=year;
+  currentQIndex=0;
+  if(currentMode==='full'){
+    setupPrepScreen();
+    showScreen('prep');
+  } else {
+    setupQAOnlyScreen();
+    showScreen('qaonly');
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// PREP SCREEN
+// ══════════════════════════════════════════════════════════
+function setupPrepScreen(){
+  const isAL=currentLevel==='al';
+  document.getElementById('prep-topic').textContent=currentPaper.topic;
+  document.getElementById('prep-context').textContent=isAL?'':(currentPaper.context||'');
+
+  // Instructions
+  const instr=document.getElementById('prep-instr');
+  if(isAL){
+    instr.innerHTML=`<strong>Task:</strong> Read the material and select <strong>at least 3 points</strong> to support your argument. In your talk: introduce the topic &amp; structure · present arguments with evidence · draw conclusions.<br><strong>20 minutes to prepare. You may make notes.</strong>`;
+  } else {
+    instr.innerHTML=`<strong>Study the material provided below (content and arguments) to plan your talk. You have 5 minutes to prepare. You can make notes on the paper. You can start earlier if you wish.</strong><br>In your talk you should:<ul class="ol-checklist"><li>formulate the issue raised in the material</li><li>compare the information provided in the material</li><li>state your opinion on the issue</li><li>support your opinion with at least two arguments, including reasons and examples</li><li>come to a conclusion</li></ul>`;
+  }
+
+  // Sources
+  const srcDiv=document.getElementById('prep-sources');
+  if(isAL){
+    srcDiv.innerHTML=`<div class="materials-box"><h3>Source Material</h3><div class="quotes-grid" id="prep-quotes-grid"></div></div>`;
+    const qg=document.getElementById('prep-quotes-grid');
+    currentPaper.quotes.forEach(q=>{
+      const d=document.createElement('div');
+      d.className='quote-item';
+      d.innerHTML=`${escH(q.text)}<div class="qi-source">— ${escH(q.source)}</div>`;
+      qg.appendChild(d);
+    });
+  } else {
+    srcDiv.innerHTML=`<div class="ol-sources-grid">${renderSource(currentPaper.s1,'Source 1')}${renderSource(currentPaper.s2,'Source 2')}</div>`;
+  }
+
+  // Planner
+  setupPlanner(isAL);
+
+  // Sample answer button
+  renderSampleBtn('prep-sample-slot','prep');
+
+  // Timer
+  prepLeft=isAL?1200:300;
+  renderPrepClock();
+  document.getElementById('btn-start-prep').style.display='inline-flex';
+  document.getElementById('btn-ready-talk').style.display='none';
+  // Reset planner panel
+  document.getElementById('prep-planner').classList.remove('open');
+  const ph=document.querySelector('#screen-prep .btn-hint');
+  if(ph) ph.textContent='💡 Talk Planner';
+}
+
+function togglePhrase(id,btn){
+  const bank=document.getElementById(id);
+  const isOpen=bank.classList.toggle('open');
+  btn.textContent=isOpen?'Hide phrases ‹':'Useful phrases ›';
+}
+
+function mkPb(id,sections){
+  const inner=sections.map(s=>{
+    if(s.prompt) return `<div class="pb-prompt">${s.prompt}</div>`;
+    if(s.words) return `<div class="pb-words">${s.words.map(w=>`<span class="pb-word">${w}</span>`).join('')}</div>`;
+    const title=s.title?`<div class="pb-section-title">${s.title}</div>`:'';
+    const phrases=s.phrases.map(p=>`<div class="pb-phrase">${p}</div>`).join('');
+    return `<div class="pb-section">${title}${phrases}</div>`;
+  }).join('');
+  return `<button class="pb-toggle" onclick="togglePhrase('${id}',this)">Useful phrases ›</button><div class="phrase-bank" id="${id}">${inner}</div>`;
+}
+
+function setupPlanner(isAL){
+  document.getElementById('planner-title').textContent='Talk Planner';
+  if(isAL){
+    document.getElementById('planner-dj').innerHTML='🎧 <strong>Be the DJ, not the karaoke singer.</strong> The sources are your tracks — mix them, don\'t perform them. Every point must answer: <em>so what?</em>';
+    document.getElementById('planner-steps').innerHTML=`
+      <div class="scaffold-step"><span class="scaffold-step-num">Intro</span><div><strong>Introduce the topic and outline what you will cover.</strong>
+        ${mkPb('al-pb-intro',[
+          {title:'Introducing the topic',phrases:['Today I would like to discuss the topic of…','The topic I have been asked to present on is…','[Topic] is a subject that raises a number of important questions…','The materials provided explore the issue of…']},
+          {title:'Outlining the structure',prompt:'What job does each point do in your argument? Name the function — that becomes your outline.'},
+          {words:['to establish','to explain','to show','to argue','to compare','to question']},
+          {phrases:['In my talk I will examine [point 1], consider [point 2], and reflect on [point 3].','I will begin by looking at [point 1], before turning to [point 2], and finally addressing [point 3].']}
+        ])}
+      </div></div>
+      <div class="scaffold-step"><span class="scaffold-step-num">Pt 1</span><div><strong>Cue a source.</strong> Then mix in your own thinking — <em>what does it mean for the topic?</em>
+        ${mkPb('al-pb-pt1',[
+          {title:'Citing',phrases:['According to [source] by [author / publication]…','As [author] points out in [source]…','[Author / source] argues that…','The data provided by [source] suggests that…','[Source] highlights the fact that…']},
+          {title:'Analysing',phrases:['This suggests that…','What this reveals is…','This is significant because…','In other words…','This can be interpreted as…','The implication here is that…']},
+          {title:'Developing',phrases:['Furthermore…','Building on this…','To illustrate this further…','A clear example of this can be seen in…','This is further supported by…']},
+          {title:'Acknowledging complexity',phrases:['While it could be argued that…','However, one must also consider…','On the other hand…','Despite this…','It is worth noting that not everyone would agree…']}
+        ])}
+      </div></div>
+      <div class="scaffold-step"><span class="scaffold-step-num">Pt 2</span><div><strong>Cue a source.</strong> Then mix in your own thinking — <em>what does it mean for the topic?</em>
+        ${mkPb('al-pb-pt2',[
+          {title:'Bridging from previous point',phrases:['Moving on to my second point…','Having established that… I would now like to turn to…','Another aspect worth considering is…','This leads me to my next point…']},
+          {title:'Citing',phrases:['According to [source] by [author / publication]…','As [author] points out in [source]…','[Author / source] argues that…','The data provided by [source] suggests that…']},
+          {title:'Analysing',phrases:['This suggests that…','What this reveals is…','This is significant because…','The implication here is that…']},
+          {title:'Developing',phrases:['Furthermore…','Building on this…','To illustrate this further…','A clear example of this can be seen in…']},
+          {title:'Acknowledging complexity',phrases:['While it could be argued that…','However, one must also consider…','On the other hand…','Despite this…']}
+        ])}
+      </div></div>
+      <div class="scaffold-step"><span class="scaffold-step-num">Pt 3</span><div><strong>Cue a source.</strong> Then mix in your own thinking — <em>what does it mean for the topic?</em>
+        ${mkPb('al-pb-pt3',[
+          {title:'Bridging from previous point',phrases:['Moving on to my third and final point…','Having considered… I would now like to turn to…','A further aspect worth examining is…','This brings me to my final point…']},
+          {title:'Citing',phrases:['According to [source] by [author / publication]…','As [author] points out in [source]…','[Author / source] argues that…','The data provided by [source] suggests that…']},
+          {title:'Analysing',phrases:['This suggests that…','What this reveals is…','This is significant because…','The implication here is that…']},
+          {title:'Developing',phrases:['Furthermore…','Building on this…','To illustrate this further…','A clear example of this can be seen in…']},
+          {title:'Acknowledging complexity',phrases:['While it could be argued that…','However, one must also consider…','On the other hand…','Despite this…']}
+        ])}
+      </div></div>
+      <div class="scaffold-step"><span class="scaffold-step-num">End</span><div><strong>Pull it together. Give your overall judgement.</strong>
+        ${mkPb('al-pb-end',[
+          {title:'Step 1 — restate your position',phrases:['In conclusion, I have argued that…','To restate my position…','Throughout this talk I have maintained that…']},
+          {title:'Step 2 — echo your main points',phrases:['Through examining [point 1], [point 2] and [point 3], it is clear that…','Having considered [point 1], [point 2] and [point 3]…','The evidence from [source 1], [source 2] and [source 3] points to…']},
+          {title:'Step 3 — final broader thought',phrases:['What this ultimately reveals is…','The broader implication of this is…','This raises the important question of…','It is clear that this issue extends beyond… and affects…','Perhaps the most important takeaway is…']}
+        ])}
+      </div></div>`;
+  } else {
+    document.getElementById('planner-dj').innerHTML='🎧 <strong>Be the DJ, not the karaoke singer.</strong> Compare the sources — don\'t just retell them one by one. What do they reveal <em>together</em> about the issue?';
+    document.getElementById('planner-steps').innerHTML=`
+      <div class="scaffold-step"><span class="scaffold-step-num">1. Intro</span><div><strong>Introduce the topic.</strong>
+        ${mkPb('ol-pb-intro',[
+          {phrases:['Today I would like to talk about…','The topic I have been asked to discuss is…','[Topic] is a subject that raises a number of important questions…']}
+        ])}
+      </div></div>
+      <div class="scaffold-step"><span class="scaffold-step-num">2. Issue</span><div><strong>Formulate the issue — the central question the sources explore.</strong> Not a problem, but a question worth answering.
+        ${mkPb('ol-pb-issue',[
+          {phrases:['Having read the materials, the issue I would like to address is…','The issue raised in both sources is…','Based on the materials provided, the central question is…','The sources raise the issue of…','Looking at the materials, one key question emerges:…']}
+        ])}
+      </div></div>
+      <div class="scaffold-step"><span class="scaffold-step-num">3. Compare</span><div><strong>Compare the sources. Be the DJ — mix them, don't perform them.</strong>
+        ${mkPb('ol-pb-compare',[
+          {title:'Citing',phrases:['According to Source 1 / Source 2…','Source 1 argues that… while Source 2 suggests that…','As Source 1 / Source 2 points out…']},
+          {title:'Analysing',phrases:['This suggests that…','What this reveals is…','The implication here is that…','This is significant because…']},
+          {title:'Contrasting',phrases:['While Source 1 focuses on… Source 2 takes a different view…','Both sources agree that… however they differ in…','Taken together, these sources paint a picture of…']}
+        ])}
+      </div></div>
+      <div class="scaffold-step"><span class="scaffold-step-num">4. Opinion</span><div><strong>State your opinion — agree, disagree, or divided.</strong>
+        ${mkPb('ol-pb-opinion',[
+          {phrases:['In my view…','Having considered both sources, I would argue that…','I find myself agreeing with… because…','I disagree with the idea that… and here is why…','I can see merit on both sides — on one hand… on the other…']}
+        ])}
+      </div></div>
+      <div class="scaffold-step"><span class="scaffold-step-num">5. Arg 1</span><div><strong>First argument — state your point, explain, discuss and prove it with examples.</strong>
+        ${mkPb('ol-pb-arg1',[
+          {title:'Topic sentence',phrases:['My first point is that…','To begin with…']},
+          {title:'Citing',phrases:['According to Source 1 / Source 2 by [author / publication]…','As [source] points out…','The data provided suggests that…']},
+          {title:'Analysing',phrases:['This suggests that…','This is significant because…','In other words…','The implication here is that…']},
+          {title:'Developing',phrases:['Furthermore…','Building on this…','To illustrate this further…','A clear example of this is…']},
+          {title:'Acknowledging complexity',phrases:['While it could be argued that…','However, one must also consider…','On the other hand…']}
+        ])}
+      </div></div>
+      <div class="scaffold-step"><span class="scaffold-step-num">6. Arg 2</span><div><strong>Second argument — same structure as Argument 1.</strong>
+        ${mkPb('ol-pb-arg2',[
+          {title:'Topic sentence',phrases:['My second point is that…','Another aspect worth considering is…']},
+          {title:'Citing',phrases:['According to Source 1 / Source 2 by [author / publication]…','As [source] points out…','The data provided suggests that…']},
+          {title:'Analysing',phrases:['This suggests that…','This is significant because…','In other words…','The implication here is that…']},
+          {title:'Developing',phrases:['Furthermore…','Building on this…','To illustrate this further…','A clear example of this is…']},
+          {title:'Acknowledging complexity',phrases:['While it could be argued that…','However, one must also consider…','On the other hand…']}
+        ])}
+      </div></div>
+      <div class="scaffold-step"><span class="scaffold-step-num">7. Conclude</span><div><strong>Summarise your talk, then end with a broader final thought.</strong>
+        ${mkPb('ol-pb-conclude',[
+          {title:'Step 1 — restate your position',phrases:['In conclusion, I have argued that…','To restate my position…','Throughout this talk I have maintained that…']},
+          {title:'Step 2 — echo your main points',phrases:['Having considered [point 1] and [point 2], it is clear that…','Through examining both sources, it is evident that…','The evidence from both sources points to…']},
+          {title:'Step 3 — final broader thought',phrases:['This is particularly relevant today because…','In a world where… this question becomes even more important…','It is worth asking ourselves…','Perhaps it is time to reconsider…','There are no easy answers here, but what is certain is…','The debate around [topic] is far from over…']}
+        ])}
+      </div></div>`;
+  }
+}
+
+document.getElementById('btn-start-prep').addEventListener('click',()=>{
+  document.getElementById('btn-start-prep').style.display='none';
+  document.getElementById('btn-ready-talk').style.display='inline-flex';
+  prepInterval=setInterval(()=>{prepLeft--;renderPrepClock();if(prepLeft<=0){clearInterval(prepInterval);goTalk();}},1000);
+});
+
+function renderPrepClock(){
+  const m=Math.floor(prepLeft/60),s=prepLeft%60;
+  const el=document.getElementById('prep-clock');
+  el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer-clock'+(prepLeft<=60?' urgent':prepLeft<=120?' warn':'');
+  const total=currentLevel==='al'?1200:300;
+  document.getElementById('prep-bar').style.width=(prepLeft/total*100)+'%';
+}
+
+// ══════════════════════════════════════════════════════════
+// TALK SCREEN
+// ══════════════════════════════════════════════════════════
+function goTalk(){
+  clearInterval(prepInterval);
+  const isAL=currentLevel==='al';
+  document.getElementById('talk-label').textContent=isAL?'Speak for 5 minutes on':'Give a 3–5 minute talk on';
+  document.getElementById('talk-topic').textContent=currentPaper.topic;
+  document.getElementById('talk-timer-label').textContent=isAL?'talk time remaining':'talk time (aim for 3–5 min)';
+
+  // Checklist
+  const cl=document.getElementById('talk-checklist');
+  if(isAL){
+    cl.innerHTML=`<li><span class="bullet"></span>Introduce the topic and outline the structure of your talk</li><li><span class="bullet"></span>Present your arguments, supported by the material</li><li><span class="bullet"></span>Draw conclusions on the topic</li>`;
+  } else {
+    cl.innerHTML=`<li><span class="bullet"></span>Formulate the issue raised in the material</li><li><span class="bullet"></span>Compare the information provided in the material</li><li><span class="bullet"></span>State your opinion on the issue</li><li><span class="bullet"></span>Support your opinion with at least two arguments, including reasons and examples</li><li><span class="bullet"></span>Come to a conclusion</li>`;
+  }
+
+  // Criteria
+  setupCriteria(isAL);
+
+  renderSampleBtn('talk-sample-slot','talk');
+  talkLeft=300;renderTalkClock();
+  // Reset criteria panel
+  document.getElementById('criteria-panel').classList.remove('open');
+  const ch=document.querySelector('#screen-talk .btn-hint');
+  if(ch) ch.textContent='💡 Criteria Reminder';
+  showScreen('talk');
+  talkInterval=setInterval(()=>{talkLeft--;renderTalkClock();if(talkLeft<=0){clearInterval(talkInterval);goQA();}},1000);
+}
+
+function setupCriteria(isAL){
+  if(isAL){
+    document.getElementById('criteria-title').textContent='What the examiner is looking for';
+    document.getElementById('criteria-list').innerHTML=`
+      <li><span class="crit-mark">✦</span>Structure clearly — intro, arguments, conclusion</li>
+      <li><span class="crit-mark">✦</span>Use at least 3 sources and refer to them specifically</li>
+      <li><span class="crit-mark">✦</span>State your position clearly and back it up with developed arguments</li>
+      <li><span class="crit-mark">✦</span>Analyse and evaluate — don't just retell or list</li>
+      <li><span class="crit-mark">✦</span>Draw a conclusion that shows your overall judgement</li>
+      <li><span class="crit-mark">✦</span>Speak fluently — well-timed pauses are fine, hesitation is not</li>`;
+  } else {
+    document.getElementById('criteria-title').textContent='What the examiner is looking for';
+    document.getElementById('criteria-list').innerHTML=`
+      <li><span class="crit-mark">✦</span>Formulate the issue — what does the material actually reveal?</li>
+      <li><span class="crit-mark">✦</span>Compare both sources — agreements, differences, tensions</li>
+      <li><span class="crit-mark">✦</span>State your position clearly and explicitly</li>
+      <li><span class="crit-mark">✦</span>Give at least 2 arguments with reasons AND examples</li>
+      <li><span class="crit-mark">✦</span>Come to a conclusion — your overall judgement</li>
+      <li><span class="crit-mark">✦</span>In Q&amp;A: answer fully with justification — don't just say yes or no</li>`;
+  }
+}
+
+function renderTalkClock(){
+  const m=Math.floor(talkLeft/60),s=talkLeft%60;
+  const el=document.getElementById('talk-clock');
+  el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer-clock'+(talkLeft<=30?' urgent':talkLeft<=60?' warn':'');
+  const bar=document.getElementById('talk-bar');
+  bar.style.width=(talkLeft/300*100)+'%';
+  bar.style.background=talkLeft<=30?'var(--red)':talkLeft<=60?'var(--amber)':'var(--sage)';
+}
+
+// ══════════════════════════════════════════════════════════
+// Q&A FULL MODE
+// ══════════════════════════════════════════════════════════
+function goQA(){clearInterval(talkInterval);currentQIndex=0;renderSampleBtn('qa-sample-slot','qa');showScreen('qa');renderQ();}
+
+function getQObj(i){
+  if(currentLevel==='al') return currentPaper.questions[i];
+  return {q:currentPaper.questions[i],quoteRef:null};
+}
+
+function renderQ(){
+  const total=currentPaper.questions.length||3;
+  const qObj=getQObj(currentQIndex);
+  const q=qObj.q||qObj;
+  const quoteRef=qObj.quoteRef||null;
+
+  let refHtml='';
+  if(quoteRef){
+    refHtml=`<div class="q-quote-ref"><div class="qr-label">Referenced quote</div>"${escH(quoteRef.text)}"<div class="qr-source">— ${escH(quoteRef.source)}</div></div>`;
+  }
+
+  const hintId=`hint-full-${currentQIndex}`;
+  document.getElementById('qa-slot').innerHTML=`
+    <div class="q-card">
+      <div class="q-num">Question ${currentQIndex+1} of ${total}</div>
+      <div class="q-text">${escH(q)}</div>
+      ${refHtml}
+      <button class="btn-hint" onclick="togglePanel('${hintId}',this)">💡 Hint</button>
+      <div class="hint-panel" id="${hintId}"><div class="hint-label">How to approach this</div>${getHint(q)}</div>
+    </div>`;
+
+  const btn=document.getElementById('btn-next-q');
+  const hint=document.getElementById('qa-nav-hint');
+  if(currentQIndex<total-1){btn.textContent='Next Question →';btn.className='btn btn-sage';hint.textContent=`Question ${currentQIndex+2} of ${total} follows`;}
+  else{btn.textContent='Finish Practice ✓';btn.className='btn btn-primary';hint.textContent='';}
+}
+
+function nextQuestion(){
+  const total=currentPaper.questions.length||3;
+  if(currentQIndex<total-1){currentQIndex++;renderQ();window.scrollTo(0,0);}
+  else showScreen('done');
+}
+
+// ══════════════════════════════════════════════════════════
+// Q&A ONLY MODE
+// ══════════════════════════════════════════════════════════
+function setupQAOnlyScreen(){
+  document.getElementById('qaonly-topic').textContent=currentPaper.topic;
+  const list=document.getElementById('qaonly-list');
+  list.innerHTML='';
+  const total=currentPaper.questions.length||3;
+  for(let i=0;i<total;i++){
+    const qObj=getQObj(i);
+    const q=qObj.q||qObj;
+    const quoteRef=qObj.quoteRef||null;
+
+    let refHtml='';
+    if(quoteRef){
+      refHtml=`<div class="q-quote-ref" style="margin-top:.8rem"><div class="qr-label">Referenced quote</div>"${escH(quoteRef.text)}"<div class="qr-source">— ${escH(quoteRef.source)}</div></div>`;
+    }
+    const hintId=`hint-qaonly-${i}`;
+    const item=document.createElement('div');
+    item.className='qaonly-item';
+    item.innerHTML=`<div class="qi-num-label">Question ${i+1}</div><div class="qi-q-text">${escH(q)}</div>${refHtml}<button class="btn-hint" onclick="togglePanel('${hintId}',this)">💡 Hint</button><div class="hint-panel" id="${hintId}"><div class="hint-label">How to approach this</div>${getHint(q)}</div>`;
+    list.appendChild(item);
+  }
+  clearInterval(qaonlyInterval);
+  qaonlyLeft=90;renderQAOnlyClock();
+  document.getElementById('btn-qaonly-start').textContent='▶ Start';
+  document.getElementById('btn-qaonly-start').disabled=false;
+  document.getElementById('qaonly-hint').textContent='Press Start when you begin answering. Reset between questions.';
+}
+
+function startQAOnlyTimer(){
+  clearInterval(qaonlyInterval);
+  qaonlyLeft=90;renderQAOnlyClock();
+  document.getElementById('btn-qaonly-start').disabled=true;
+  document.getElementById('qaonly-hint').textContent='Speaking…';
+  qaonlyInterval=setInterval(()=>{qaonlyLeft--;renderQAOnlyClock();if(qaonlyLeft<=0){clearInterval(qaonlyInterval);document.getElementById('qaonly-hint').textContent='Time is up! Reset for the next question.';const b=document.getElementById('btn-qaonly-start');b.disabled=false;b.textContent='▶ Start again';}},1000);
+}
+
+function resetQAOnlyTimer(){
+  clearInterval(qaonlyInterval);
+  qaonlyLeft=90;renderQAOnlyClock();
+  const b=document.getElementById('btn-qaonly-start');b.disabled=false;b.textContent='▶ Start';
+  document.getElementById('qaonly-hint').textContent='Press Start when you begin answering. Reset between questions.';
+}
+
+function renderQAOnlyClock(){
+  const m=Math.floor(qaonlyLeft/60),s=qaonlyLeft%60;
+  const el=document.getElementById('qaonly-clock');
+  el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  el.className='qa-clock'+(qaonlyLeft<=15?' urgent':qaonlyLeft<=30?' warn':'');
+  document.getElementById('qaonly-bar').style.width=(qaonlyLeft/90*100)+'%';
+  document.getElementById('qaonly-bar').style.background=qaonlyLeft<=15?'var(--red)':'var(--amber)';
+}
+
+// ══════════════════════════════════════════════════════════
+// SCAFFOLD / HINT TOGGLE
+// ══════════════════════════════════════════════════════════
+function togglePanel(id,btn){
+  const panel=document.getElementById(id);
+  const isOpen=panel.classList.toggle('open');
+  btn.textContent=isOpen?'✕ Hide hint':'💡 Hint';
+}
+
+// ══════════════════════════════════════════════════════════
+// HINTS
+// ══════════════════════════════════════════════════════════
+function getHint(question){
+  const q=question.toLowerCase();
+  // AL patterns
+  if(q.includes('criteria did you use'))
+    return `Explain your <strong>reasoning</strong>, not just your choices. Which sources offered the strongest or most contrasting perspectives? How did they allow you to build a coherent argument? Avoid "I chose this because it's interesting" — say what argumentative work it does.`;
+  if(q.includes('what issue does')||q.includes('what issue'))
+    return `Don't just paraphrase the quote. Ask: <strong>what problem or tension does it point to?</strong> What does the speaker assume about people, society, or behaviour? What real-world situation does it challenge or critique? Lead with the issue, then explain why it matters for the topic.`;
+  if(q.includes('what can you infer'))
+    return `<strong>Inference means going beyond the words.</strong> What is the speaker suggesting without saying directly? What values, concerns, or assumptions lie behind the statement? Make a claim about what the quote implies — then justify it.`;
+  if(q.includes('how do you understand')||q.includes('how do you interpret'))
+    return `First explain what the quote means in your own words. Then <strong>connect it to the bigger picture</strong> — what does it reveal, challenge, or add to the topic? Don't stop at "it means that…" — show why it's significant.`;
+  if(q.includes('what does')&&q.includes('imply'))
+    return `<strong>Look for the hidden message.</strong> What is the speaker taking for granted? What does the quote suggest about human behaviour, society, or values — without stating it outright? State your inference clearly and explain what it means for the topic.`;
+  // OL / shared patterns
+  if(q.includes('would you')&&(q.includes('why')||q.includes('why not')))
+    return `<strong>Take a clear position first</strong> (yes or no) — don't sit on the fence. Then give 2–3 reasons that justify your answer. Try to reference one of the sources if relevant, and acknowledge the complexity briefly.`;
+  if(q.includes('do you think')||q.includes('do you agree'))
+    return `<strong>State your view directly</strong> — "Yes, I think..." or "No, I don't think..." Then develop 2–3 reasons. A brief acknowledgement of the other side makes your answer more convincing.`;
+  if(q.includes('what advice')||q.includes('advice would you give'))
+    return `<strong>Be specific and practical</strong> — give concrete recommendations, not vague generalities. Say <em>why</em> each piece of advice matters. You can draw on the sources or your own experience.`;
+  if(q.includes('how can')||q.includes('how could')||q.includes('how might'))
+    return `<strong>Give concrete, practical suggestions</strong> — at least 2. Explain the reasoning behind each one. Don't just list ideas; say <em>why</em> they would work.`;
+  if(q.includes('to what extent'))
+    return `This is an <strong>evaluative question</strong> — don't just argue one side. State your position, acknowledge complexity, then defend your judgement with reasons. "To a large extent, yes — because… however…" is a strong opening move.`;
+  if(q.includes('why'))
+    return `<strong>Explain the reasons</strong> behind the phenomenon — don't just describe what happens. Think about causes, motivations, social factors. Give 2–3 clear reasons with brief examples.`;
+  if(q.includes('what other')||q.includes('what else')||q.includes('other benefit'))
+    return `<strong>Go beyond the material</strong> — the examiner wants you to think independently. Draw on your own knowledge or experience. Give 2–3 well-developed points, not a long list.`;
+  if(q.includes('should')||q.includes('should there'))
+    return `<strong>State your position clearly</strong>, then defend it. Consider: who benefits? who is responsible? what are the risks of not acting? A good answer also acknowledges the strongest counterargument before rebutting it.`;
+  return `<strong>State your position clearly first.</strong> Then give 2–3 developed reasons — not a list, but an argument. Use examples where you can. 4–5 well-developed sentences is better than 8 rushed ones.`;
+}
+
+// ══════════════════════════════════════════════════════════
+// SAMPLE ANSWERS
+// ══════════════════════════════════════════════════════════
+const SAMPLE_ANSWERS={
+  'ol-2025-5':{
+    topic:'Summer Jobs',
+    parts:[
+      {text:"Today I would like to talk about summer jobs and their role in the lives of young people.",label:"Introduces the topic",quality:'good'},
+      {text:"The issue raised in both sources is whether working during the summer months is genuinely beneficial for teenagers, or whether it is a tradition that is slowly disappearing.",label:"Formulates the issue",quality:'good'},
+      {text:"Source 1 argues that summer jobs teach young people essential values such as diligence, reliability and commitment, while Source 2 highlights that the number of teenagers in employment during summer has dropped significantly — from around 60% in the 1970s to just 35% by 2016.",label:"Compares the sources",quality:'good'},
+      {text:"Where Source 1 focuses on what is gained from the experience, Source 2 shows that fewer young people are actually having it in the first place.",label:"Draws a contrast between the two sources",quality:'good'},
+      {text:"Having considered both sources, I agree that summer jobs remain genuinely beneficial for teenagers, despite the decline in their popularity.",label:"States opinion clearly, linked to the issue",quality:'good'},
+      {text:"My first point is that a summer job gives teenagers something that school simply cannot — real, practical responsibility.",label:"Argument 1 — point stated",quality:'good'},
+      {text:"When a teenager is required to show up on time, follow instructions from a manager and deal with customers or colleagues, they are exposed to how workplaces actually function.",label:"Argument 1 — explained",quality:'good'},
+      {text:"Take, for example, a student who spends the summer working in a café or a supermarket — by the end of it, they have learned to handle pressure, manage their time and communicate with people they would never otherwise meet.",label:"Argument 1 — concrete example",quality:'good'},
+      {text:"This experience is particularly valuable because it cannot be replicated in a classroom. A student who has worked arrives at their first permanent job having already made their early mistakes in a lower-stakes environment, which makes the transition significantly easier.",label:"Argument 1 — why it matters, linked back to the issue",quality:'good'},
+      {text:"My second point is that working during the summer also teaches young people about the value of money.",label:"Argument 2 — point stated",quality:'good'},
+      {text:"Earning a salary, even a small one, changes the way teenagers think about spending and saving. When young people have to work for what they have, they tend to become more thoughtful about their financial decisions.",label:"Argument 2 — explained, but drifting away from the issue",quality:'partial'},
+      {text:"This is an important quality to develop, as managing money responsibly is something that will be relevant throughout their lives.",label:"No concrete example. No link back to the issue.",quality:'weak'},
+      {text:"In conclusion, both sources show that while summer employment is becoming less common, the benefits it offers have not diminished.",label:"Conclusion — summary",quality:'good'},
+      {text:"The practical responsibility that comes with holding down a job is an experience that shapes young people in lasting ways.",label:"Refers back to Argument 1 only — Argument 2 is absent from the conclusion",quality:'partial'},
+      {text:"It is worth asking ourselves whether young people today are missing out on something that previous generations took for granted.",label:"Final broader thought",quality:'good'}
+    ]
+  }
+};
+
+let saIndex=0,saTotal=0,saPaperKey=null,saOriginScreen='prep';
+
+function getSampleKey(){
+  return currentLevel==='ol'&&currentPaper?`ol-${currentPaper._year}-${currentPaper.num}`:null;
+}
+
+function renderSampleBtn(slotId,originScreen){
+  const slot=document.getElementById(slotId);
+  if(!slot) return;
+  if(currentLevel!=='ol'){slot.innerHTML='';return;}
+  const key=getSampleKey();
+  const hasSample=!!SAMPLE_ANSWERS[key];
+  slot.innerHTML=hasSample
+    ?`<button class="btn-sample" onclick="openSampleAnswer('${originScreen}')">📄 View sample answer</button>`
+    :`<button class="btn-sample coming" disabled>📄 Sample answer — coming soon</button>`;
+}
+
+function openSampleAnswer(originScreen){
+  const key=getSampleKey();
+  const sa=SAMPLE_ANSWERS[key];
+  if(!sa) return;
+  saOriginScreen=originScreen||'prep';
+  saPaperKey=key; saIndex=0; saTotal=sa.parts.length;
+  document.getElementById('sa-topic').textContent=sa.topic;
+  document.getElementById('sa-counter').textContent=`0 / ${saTotal}`;
+  document.getElementById('btn-sa-reveal').textContent='Reveal';
+  document.getElementById('btn-sa-reveal').disabled=false;
+  const backLabel={prep:'← Back to Preparation',talk:'← Back to Talk',qa:'← Back to Q&A'};
+  document.getElementById('sa-back-btn').textContent=backLabel[saOriginScreen]||'← Back';
+  const PARA_BREAKS=[0,2,5,9,12];
+  const textCol=document.getElementById('sa-text-col');
+  let textHtml='',paraOpen=false;
+  sa.parts.forEach((p,i)=>{
+    if(PARA_BREAKS.includes(i)){if(paraOpen)textHtml+='</div>';textHtml+='<div class="sa-para">';paraOpen=true;}
+    textHtml+=`<span class="sa-part" id="sa-part-${i}">${escH(p.text)} </span>`;
+  });
+  if(paraOpen)textHtml+='</div>';
+  textCol.innerHTML=textHtml;
+  document.getElementById('sa-ann-col').innerHTML=sa.parts.map((p,i)=>
+    `<div class="sa-ann ${p.quality}" id="sa-ann-${i}"><div class="sa-ann-label">${escH(p.label)}</div></div>`).join('');
+  showScreen('sample');
+}
+
+function saRevealNext(){
+  const sa=SAMPLE_ANSWERS[saPaperKey];
+  if(!sa||saIndex>=saTotal) return;
+  document.getElementById(`sa-part-${saIndex}`).classList.add(sa.parts[saIndex].quality);
+  document.getElementById(`sa-ann-${saIndex}`).classList.add('visible');
+  saIndex++;
+  document.getElementById('sa-counter').textContent=`${saIndex} / ${saTotal}`;
+  if(saIndex>=saTotal){document.getElementById('btn-sa-reveal').textContent='All revealed';document.getElementById('btn-sa-reveal').disabled=true;}
+}
+
+function saReset(){
+  const sa=SAMPLE_ANSWERS[saPaperKey];
+  if(!sa) return;
+  saIndex=0;
+  document.getElementById('sa-counter').textContent=`0 / ${saTotal}`;
+  document.getElementById('btn-sa-reveal').textContent='Reveal';
+  document.getElementById('btn-sa-reveal').disabled=false;
+  sa.parts.forEach((_,i)=>{
+    document.getElementById(`sa-part-${i}`).className='sa-part';
+    document.getElementById(`sa-ann-${i}`).classList.remove('visible');
+  });
+}
+
+function goSampleBack(){showScreen(saOriginScreen==='talk'?'talk':saOriginScreen==='qa'?'qa':'prep');}
+
+// ── RANDOMISER ─────────────────────────────────────────
+let randYear=null,randIdx=null;
+
+function randomisePaper(){
+  const data=currentLevel==='al'?AL:OL;
+  const years=Object.keys(data);
+  const all=[];
+  years.forEach(y=>data[y].forEach((_,i)=>all.push({year:y,idx:i})));
+  const pick=all[Math.floor(Math.random()*all.length)];
+  randYear=pick.year; randIdx=pick.idx;
+  const paper=data[pick.year][pick.idx];
+  document.getElementById('rand-topic').textContent=paper.topic;
+  document.getElementById('rand-meta').textContent=`${pick.year} · Paper ${paper.num} · ${currentLevel.toUpperCase()}`;
+  showScreen('random');
+}
+
+function startRandomPaper(){
+  if(randYear===null||randIdx===null) return;
+  startPaper(randYear,randIdx);
+}
+
+// ══════════════════════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════════════════════
+buildSelectGrids();
+</script>
+</body>
+</html>
